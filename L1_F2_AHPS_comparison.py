@@ -5,6 +5,7 @@ from netCDF4 import Dataset
 from wrf import getvar, latlon_coords
 from self_utils import ahps, coast
 import numpy as np
+from scipy.interpolate import griddata
 
 
 plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
@@ -15,6 +16,10 @@ home = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/AHPS/"
 ahps_files = glob.glob(home + "nws_precip*_conus.nc")
 
 wrfoutfile = sorted(glob.glob('/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/post/WRF_9-3-51/WRFV4/wrfout_d01_2017-*26*'))
+
+
+# from new_config_simulation
+#wrfoutfile = sorted(glob.glob('/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01c_new_config/wrfouts/wrfout_d01_2017-*26*'))
 
 wrf_pcp = (
     getvar(Dataset(wrfoutfile[-1]), "RAINC") + getvar(Dataset(wrfoutfile[-1]), "RAINNC")
@@ -53,21 +58,29 @@ ax[1].set_title('WRF (LULC 2017)')
 cbar = plt.colorbar(cont, ax=ax.ravel(), ticks=levels)
 cbar.ax.set_yticklabels(levels)
 cbar.ax.set_ylabel('Precipitation (mm)')
-plt.savefig('../figures/AHPS_post_pcp.jpeg')
-plt.show()
+
 
 merged_lats = np.arange(domain_bb[2], domain_bb[3], 0.05)
 merged_lons = np.arange(domain_bb[0], domain_bb[1], 0.05)
 merged_meshlon, merged_meshlat = np.meshgrid(merged_lons, merged_lats)
 
-from scipy.interpolate import griddata
 
 ahps_pcp_domain = griddata((ahps_lon.ravel(), ahps_lat.ravel()), ahps_pcp.ravel(), (merged_meshlon, merged_meshlat))
 wrf_pcp_domain = griddata((wrf_lon.values.ravel(), wrf_lat.values.ravel()), wrf_pcp.values.ravel(), (merged_meshlon, merged_meshlat))
 
-plt.imshow(wrf_pcp_domain-ahps_pcp_domain, extent=domain_bb, cmap='coolwarm')
-plt.colorbar()
+from sklearn.metrics import mean_squared_error
+def rmse(predictions, targets):
+    return np.sqrt(np.nanmean((predictions - targets) ** 2))
+
+
+rms = rmse(ahps_pcp_domain.ravel(), wrf_pcp_domain.ravel())
+cor = np.corrcoef(ahps_pcp_domain.ravel(), wrf_pcp_domain.ravel())
+print(rms, cor)
+
+#plt.savefig('../figures/AHPS_post_pcp.jpeg')
+#plt.savefig('../figures/AHPS_post_pcp.jpeg')
 plt.show()
+
 
 
 

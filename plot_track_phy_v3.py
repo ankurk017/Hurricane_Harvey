@@ -51,11 +51,15 @@ wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[::3]
 wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01/'
 wrfoutfile_post = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[25:25+48]
 
+wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01c_new_config/'
+wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01d_new_config_from_paper/'
 wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01_no_moving_domain/WRF/test/em_real/'
-wrfoutfile_post = sorted(glob.glob(wrf_runs + "wrfout_d01*"))
+wrfoutfile_post = sorted(glob.glob(wrf_runs + "wrfout_d02*"))
+
+
+
 
 basin = tracks.TrackDataset(basin='north_atlantic',source='hurdat',include_btk=False)
-
 harvey = basin.get_storm(('harvey',2017))
 
 
@@ -134,7 +138,7 @@ axs.plot(obs_ws["Time"],
         obs_ws*1.95, "b", label="LULC 2017")
 
 axs.plot(harvey['date'], harvey['vmax'], "k-", label="OBS")
-plt.legend()
+#plt.legend()
 axs.set_xlabel("Date")
 axs.set_ylabel("10 m Wind Speed (knots)")
 axs.set_xlim((harvey['date'][33], harvey['date'][54]))
@@ -152,7 +156,7 @@ axs.plot(obs_slp["Time"],
        obs_slp, "b", label="LULC 2017")
 
 axs.plot(harvey['date'], harvey['mslp'], "k-", label="OBS")
-plt.legend()
+#plt.legend()
 #axs.set_xticks(rotation=45)
 axs.set_xlabel("Date")
 axs.set_ylabel("MSLP (hPa)")
@@ -179,13 +183,14 @@ from self_utils import coast
 
 
 
-fig = plt.figure(figsize=(20, 10))
+fig = plt.figure(figsize=(12, 6))
 ax = plt.axes(projection=ccrs.PlateCarree())
 coast.plot_coast(ax)
 ax.plot(harvey['lon'], harvey['lat'], 'k-', label='OBS')
-ax.plot(track_lon[6:], track_lat[6:], 'b-', label='2001')
-ax.plot(track_lon_phy[6:], track_lat_phy[6:], 'r-', label='2017')
-plt.legend()
+ax.plot(track_lon[6:], track_lat[6:], 'r-', label='2001')
+ax.plot(track_lon_phy[6:-3], track_lat_phy[6:-3], 'b-', label='2017')
+#plt.legend()
+plt.tight_layout()
 plt.show()
 
 
