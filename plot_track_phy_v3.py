@@ -44,18 +44,18 @@ wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[25:25+48]
 
 #wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy02/'
 
-wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01/'
-wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[::3]
+#wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01/'
+#wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[25:25+48]
 
 
 wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01/'
+wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/post/WRF_9-3-51/WRFV4/'
 wrfoutfile_post = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[25:25+48]
 
-wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01c_new_config/'
-wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01d_new_config_from_paper/'
-wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01_no_moving_domain/WRF/test/em_real/'
-wrfoutfile_post = sorted(glob.glob(wrf_runs + "wrfout_d02*"))
-
+#wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01c_new_config/'
+#wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01d_new_config_from_paper/'
+#wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01_no_moving_domain/WRF/test/em_real/'
+#wrfoutfile_post = sorted(glob.glob(wrf_runs + "wrfout_d02*"))
 
 
 

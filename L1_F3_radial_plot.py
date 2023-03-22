@@ -152,8 +152,8 @@ post_files = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_
 r, ang, pre_precip = get_precip(pre_files)
 r, ang, post_precip = get_precip(post_files)
 
-pre_precip_polar_mean = np.nanmean(np.array(pre_precip), axis=0)
-post_precip_polar_mean = np.nanmean(np.array(post_precip), axis=0)
+pre_precip_polar_mean = np.nansum(np.array(pre_precip), axis=0)
+post_precip_polar_mean = np.nansum(np.array(post_precip), axis=0)
 
 fig = plt.figure(1)
 ax = fig.add_subplot(111, projection='polar')
@@ -183,7 +183,6 @@ ax.set_theta_zero_location('N')
 cbar = plt.colorbar(cont, ax = ax)
 cbar.ax.set_ylabel('Precipitation Error (mm/hr)')
 plt.tight_layout()
-plt.show()
 
 
 plt.figure(figsize=(7, 4))
@@ -194,8 +193,17 @@ plt.ylabel("Precipation")
 plt.tight_layout()
 plt.legend()
 plt.xlim((0, np.round(r.max() * 111.11)))
+
+
+
+plt.figure(figsize=(7, 4))
+plt.plot(r * 111.111, np.nanmean(post_precip_polar_mean.T - pre_precip_polar_mean.T, axis=1), 'r', label='LULC 2001')
+#plt.plot(r * 111.111, np.nanmean(post_precip_polar_mean.T, axis=1), 'b', label='LULC 2017')
+plt.xlabel("Radius from the storm center (km)")
+plt.ylabel("Precipation")
+plt.tight_layout()
+plt.legend()
+plt.xlim((0, np.round(r.max() * 111.11)))
 plt.show()
-
-
 
 
