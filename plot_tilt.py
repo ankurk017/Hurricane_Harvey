@@ -40,7 +40,8 @@ plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
 
 
 wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WRFV4/'
-wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d02*"))[25:25+48]
+#wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d02*"))[25:25+48]
+wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d02*"))[:47+48]
 
 #wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy02/'
 
@@ -102,13 +103,13 @@ axs.xaxis.set_major_formatter(myFmt)
 color = 'tab:red'
 ax2  = axs.twinx()
 #ax2.plot(obs_slp['Time'], np.array(tilt).squeeze())
-ax2.scatter(obs_slp['Time'], pd.DataFrame(np.array(tilt).squeeze()).rolling(window=3, min_periods=1).mean().values, color=color, marker='o')
+ax2.scatter(obs_slp['Time'], pd.DataFrame(np.array(tilt).squeeze()).rolling(window=3, min_periods=1).mean().values*10, color=color, marker='o') # km
 axs.grid(color = 'black', linestyle = '--', linewidth = 0.5)
-ax2.set_ylabel(r'Vortex tilt ($^o$)', color=color)
+ax2.set_ylabel(r'Vortex tilt ($km$)', color=color)
 ax2.tick_params(axis='y', labelcolor=color)
 
 ax2.xaxis.set_major_formatter(myFmt)
 plt.tight_layout()
-plt.savefig('../figures/Hurricane_Vortex_tilt.jpeg')
+plt.savefig('../figures/Hurricane_Vortex_tilt_v2.jpeg')
 plt.show()
 

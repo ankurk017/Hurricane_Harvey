@@ -71,7 +71,7 @@ geometries = reader.geometries()
 for geometry in geometries:
     ax[1].add_geometries([geometry], ccrs.PlateCarree(), facecolor='none', edgecolor='blue')
 
-plt.savefig('../figures/AHPS_pre-post_pcp.jpeg')
+#plt.savefig('../figures/AHPS_pre-post_pcp.jpeg')
 plt.show()
 
 
