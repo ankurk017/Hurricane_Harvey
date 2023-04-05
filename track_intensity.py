@@ -11,7 +11,7 @@ Original file is located at
 import tropycal.tracks as tracks
 import matplotlib.pyplot as plt
 import numpy as np
-plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
+plt.rcParams.update({"font.size": 17, "font.weight": "bold"})
 
 basin = tracks.TrackDataset(basin='north_atlantic',source='hurdat',include_btk=False)
 
@@ -39,6 +39,7 @@ def plot_intensity(name='michael', year=2018, start=1, skip=10):
 
 plot_intensity(name='ida', year=2021)
 plt.savefig('../figures/IDA_intensity.jpeg')
+
 plot_intensity(name='harvey', year=2017, start=20)
 plt.savefig('../figures/Harvey_intensity.jpeg')
 
