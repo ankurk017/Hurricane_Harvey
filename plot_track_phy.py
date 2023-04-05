@@ -49,11 +49,10 @@ wrfoutfile = sorted(glob.glob(wrf_runs + "wrfout_d02*"))
 wrfoutfile_physics = sorted(glob.glob(wrf_pruns + "wrfout_d02*"))
 
 
+basin = tracks.TrackDataset(basin='north_atlantic',
+                            source='hurdat', include_btk=False)
 
-basin = tracks.TrackDataset(basin='north_atlantic',source='hurdat',include_btk=False)
-
-harvey = basin.get_storm(('harvey',2017))
-
+harvey = basin.get_storm(('harvey', 2017))
 
 
 wrf_ncfile = Dataset(wrfoutfile[0])
@@ -79,8 +78,8 @@ for timeid in progressbar.progressbar(range(len(wrfoutfile))):
 
 mslp_timeseries = xr.concat(slp_min, dim="time")
 ws_timeseries = xr.concat(ws_max, dim="time")
-#wrf_ida_lonlat_land = [is_land(lon, lat) for lon, lat in zip(track_lon, track_lat)]
-#ida_wrf_landfall_time = mslp_timeseries.isel(time=42)["Time"].values
+# wrf_ida_lonlat_land = [is_land(lon, lat) for lon, lat in zip(track_lon, track_lat)]
+# ida_wrf_landfall_time = mslp_timeseries.isel(time=42)["Time"].values
 
 
 # PHYSICS
@@ -150,7 +149,7 @@ myFmt = mdates.DateFormatter('%m-%d')
 axs.xaxis.set_major_formatter(myFmt)
 plt.tight_layout()
 
-#plt.savefig('../figures/Oct05_Track_WS_comparison_corral.jpeg')
+# plt.savefig('../figures/Oct05_Track_WS_comparison_corral.jpeg')
 
 fig, axs = plt.subplots(figsize=(10, 5))
 axs.plot(mslp_timeseries["Time"], mslp_timeseries, "r", label="2001")
@@ -158,7 +157,7 @@ axs.plot(mslp_timeseries_physics["Time"],
          mslp_timeseries_physics, "b", label="2020")
 axs.plot(harvey['date'], harvey['mslp'], "k-", label="OBS")
 plt.legend()
-#axs.set_xticks(rotation=45)
+# axs.set_xticks(rotation=45)
 axs.set_xlabel("Date")
 axs.set_ylabel("MSLP (hPa)")
 axs.set_xlim((harvey['date'][33], harvey['date'][54]))
@@ -166,13 +165,12 @@ plt.tight_layout()
 myFmt = mdates.DateFormatter('%m-%d')
 axs.xaxis.set_major_formatter(myFmt)
 
-#plt.savefig('../figures/Oct05_Track_MSLP_comparison_corral.jpeg')
+# plt.savefig('../figures/Oct05_Track_MSLP_comparison_corral.jpeg')
 plt.show()
 
-#os.system(f'grep -r ATCF {wrf_pruns}/rsl.error.0000  > IDA_track_Moving_Nest.txt')
-#wrf_track=pd.read_csv('IDA_track_Moving_Nest.txt',header=None, delimiter=r"\s+")
-#plt.plot([datetime.datetime.strptime(dates, '%Y-%m-%d_%H:%M:%S') for dates in wrf_track[1]], wrf_track[4], 'm-')
-
+# os.system(f'grep -r ATCF {wrf_pruns}/rsl.error.0000  > IDA_track_Moving_Nest.txt')
+# wrf_track=pd.read_csv('IDA_track_Moving_Nest.txt',header=None, delimiter=r"\s+")
+# plt.plot([datetime.datetime.strptime(dates, '%Y-%m-%d_%H:%M:%S') for dates in wrf_track[1]], wrf_track[4], 'm-')
 
 
 plt.show()

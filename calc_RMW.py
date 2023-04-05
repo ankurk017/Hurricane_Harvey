@@ -1,3 +1,4 @@
+import tropycal.tracks as tracks
 import xarray as xr
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,13 +10,12 @@ import src.coast
 
 plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
 
-import tropycal.tracks as tracks
-
 
 def get_wrfvar(wrf_ncfile, variable_name, pres_level):
     pressure_3d = getvar(wrf_ncfile, "pressure")
     variable = xr.concat(
-        [interplevel(getvar(wrf_ncfile, variable_name), pressure_3d, pres_level)],
+        [interplevel(getvar(wrf_ncfile, variable_name),
+                     pressure_3d, pres_level)],
         dim="level",
     )
     return variable
@@ -28,14 +28,16 @@ def fmt(x):
     return rf"{s} \%" if plt.rcParams["text.usetex"] else f"{s} %"
 
 
-basin = tracks.TrackDataset(basin="north_atlantic", source="hurdat", include_btk=False)
+basin = tracks.TrackDataset(basin="north_atlantic",
+                            source="hurdat", include_btk=False)
 harvey = basin.get_storm(("harvey", 2017))
 
 
 data_dir = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_IDA/Analysis/wrfouts/"
 data_dir = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WRFV4/"
 
-pres_levels = np.array((np.arange(1000, 700, -25), np.arange(700, 100, -50))).ravel()
+pres_levels = np.array(
+    (np.arange(1000, 700, -25), np.arange(700, 100, -50))).ravel()
 
 wrf_reffile = data_dir + "wrfout_d02_2017-08-24_06:00:00"
 ref_ncfile = Dataset(wrf_reffile)
@@ -118,7 +120,8 @@ ax[0].plot(harvey["lon"], harvey["lat"], "b-")
 ax[0].set_xlim((u_wind["XLONG"].min().values, u_wind["XLONG"].max().values))
 ax[0].set_ylim((u_wind["XLAT"].min().values, u_wind["XLAT"].max().values))
 ax[0].set_title(f"{str(slp['Time'].values)[:13]} | 850 hPa")
-ax[0].plot(getvar(ncfile, 'slp')['XLONG'][np.where(getvar(ncfile, 'slp')==getvar(ncfile, 'slp').min())].values, getvar(ncfile, 'slp')['XLAT'][np.where(getvar(ncfile, 'slp')==getvar(ncfile, 'slp').min())].values, 'ro')
+ax[0].plot(getvar(ncfile, 'slp')['XLONG'][np.where(getvar(ncfile, 'slp') == getvar(ncfile, 'slp').min())].values,
+           getvar(ncfile, 'slp')['XLAT'][np.where(getvar(ncfile, 'slp') == getvar(ncfile, 'slp').min())].values, 'ro')
 
 u_wind = (
     get_wrfvar(ncfile, "ua", [350])
@@ -168,12 +171,13 @@ ax[1].plot(harvey["lon"], harvey["lat"], "b-")
 ax[1].set_xlim((u_wind["XLONG"].min().values, u_wind["XLONG"].max().values))
 ax[1].set_ylim((u_wind["XLAT"].min().values, u_wind["XLAT"].max().values))
 ax[1].set_title(f"{str(slp['Time'].values)[:13]} | 350 hPa")
-ax[1].plot(getvar(ncfile, 'slp')['XLONG'][np.where(getvar(ncfile, 'slp')==getvar(ncfile, 'slp').min())].values, getvar(ncfile, 'slp')['XLAT'][np.where(getvar(ncfile, 'slp')==getvar(ncfile, 'slp').min())].values, 'ro')
+ax[1].plot(getvar(ncfile, 'slp')['XLONG'][np.where(getvar(ncfile, 'slp') == getvar(ncfile, 'slp').min())].values,
+           getvar(ncfile, 'slp')['XLAT'][np.where(getvar(ncfile, 'slp') == getvar(ncfile, 'slp').min())].values, 'ro')
 
 plt.tight_layout()
 cbar = plt.colorbar(cont, ax=ax.ravel())
 cbar.set_label("Wind Speed (m/s)")
-#plt.savefig(f"../figures/Quiver_ws_{str(slp['Time'].values)[:13]}.jpeg")
+# plt.savefig(f"../figures/Quiver_ws_{str(slp['Time'].values)[:13]}.jpeg")
 # plt.show()
 
 theta_anom = theta - ref_theta
@@ -226,6 +230,6 @@ plt.ylabel("Pressure (hPa)")
 plt.title(f"{str(slp['Time'].values)[:13]} ")
 plt.tight_layout()
 
-#plt.savefig(f"../figures/Theta_RH_{str(slp['Time'].values)[:13]}.jpeg")
+# plt.savefig(f"../figures/Theta_RH_{str(slp['Time'].values)[:13]}.jpeg")
 
 plt.show()

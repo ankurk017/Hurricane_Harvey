@@ -33,11 +33,11 @@ from shapely.ops import unary_union
 from shapely.prepared import prep
 
 
-
 plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
 
 
-wrfoutfile = sorted(glob.glob("/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey/LULC_2001/WRF/test/em_real/wrfout_d02*"))
+wrfoutfile = sorted(glob.glob(
+    "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey/LULC_2001/WRF/test/em_real/wrfout_d02*"))
 
 wrf_ncfile = Dataset(wrfoutfile[0])
 
@@ -73,7 +73,7 @@ ax.add_feature(cfeature.STATES)
 
 plt.plot(track_lon1, track_lat1, "b", label="Sim 1")
 
-#plt.plot(-np.array(ida_lon), ida_lat, "k",
+# plt.plot(-np.array(ida_lon), ida_lat, "k",
 #         transform=ccrs.PlateCarree(), label="OBS")
 plt.legend()
 
@@ -93,5 +93,5 @@ gl.left_ylabels = True
 gl.xlines = True
 gl.xformatter = LONGITUDE_FORMATTER
 gl.yformatter = LATITUDE_FORMATTER
-#plt.savefig('../figures/L0_P1.jpeg')
+# plt.savefig('../figures/L0_P1.jpeg')
 plt.show()

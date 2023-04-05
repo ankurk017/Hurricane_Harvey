@@ -54,7 +54,8 @@ def convert_polar(var_cropped, margin=5, resolution=0.09):
 
     for x_id in range(y_polar.shape[0]):
         for y_id in range(y_polar.shape[1]):
-            pcp_polar[x_id, y_id] = pcp_interp(x_polar[x_id, y_id], y_polar[x_id, y_id])
+            pcp_polar[x_id, y_id] = pcp_interp(
+                x_polar[x_id, y_id], y_polar[x_id, y_id])
 
     return r, ang, pcp_polar
 
@@ -65,8 +66,6 @@ def wrf_assign_coords(var):
     return var.drop(["XLONG", "XLAT"]).assign_coords(
         south_north=lat_1d, west_east=lon_1d
     )
-
-
 
 
 def get_precip(wrf_runs):
@@ -127,17 +126,21 @@ def get_precip(wrf_runs):
         lat_1d = ref_var.XLAT.mean(dim="west_east").values
 
         lon_ids = np.where(
-            np.logical_and(lon_1d >= cen_lon - margin, lon_1d <= cen_lon + margin)
+            np.logical_and(lon_1d >= cen_lon - margin,
+                           lon_1d <= cen_lon + margin)
         )[0]
 
         lat_ids = np.where(
-            np.logical_and(lat_1d >= cen_lat - margin, lat_1d <= cen_lat + margin)
+            np.logical_and(lat_1d >= cen_lat - margin,
+                           lat_1d <= cen_lat + margin)
         )[0]
 
         var_cropped = var.isel(west_east=lon_ids, south_north=lat_ids)
 
-        var_cropped = var_cropped.assign_coords(XLONG=var_cropped.XLONG - cen_lon)
-        var_cropped = var_cropped.assign_coords(XLAT=var_cropped.XLAT - cen_lat)
+        var_cropped = var_cropped.assign_coords(
+            XLONG=var_cropped.XLONG - cen_lon)
+        var_cropped = var_cropped.assign_coords(
+            XLAT=var_cropped.XLAT - cen_lat)
 
         resolution = np.unique(np.round(np.diff(lon_1d), 2))[0]
         r, ang, var_polar = var_cropped_polar = convert_polar(var_cropped)
@@ -159,7 +162,7 @@ fig = plt.figure(1)
 ax = fig.add_subplot(111, projection='polar')
 cont = ax.contourf(ang, r[:15]*111.11, post_precip_polar_mean[:, :15].T)
 ax.set_theta_zero_location('N')
-cbar = plt.colorbar(cont, ax = ax)
+cbar = plt.colorbar(cont, ax=ax)
 cbar.ax.set_ylabel('Precipitation (mm/hr)')
 plt.title('LULC 2017')
 plt.tight_layout()
@@ -169,7 +172,7 @@ fig = plt.figure(2)
 ax = fig.add_subplot(111, projection='polar')
 cont = ax.contourf(ang, r[:15]*111.11, pre_precip_polar_mean[:, :15].T)
 ax.set_theta_zero_location('N')
-cbar = plt.colorbar(cont, ax = ax)
+cbar = plt.colorbar(cont, ax=ax)
 cbar.ax.set_ylabel('Precipitation (mm/hr)')
 plt.title('LULC 2001')
 
@@ -178,16 +181,19 @@ plt.tight_layout()
 
 fig = plt.figure(3)
 ax = fig.add_subplot(111, projection='polar')
-cont = ax.contourf(ang, r[:15]*111.11, post_precip_polar_mean[:, :15].T - pre_precip_polar_mean[:, :15].T, cmap='bwr')
+cont = ax.contourf(ang, r[:15]*111.11, post_precip_polar_mean[:,
+                   :15].T - pre_precip_polar_mean[:, :15].T, cmap='bwr')
 ax.set_theta_zero_location('N')
-cbar = plt.colorbar(cont, ax = ax)
+cbar = plt.colorbar(cont, ax=ax)
 cbar.ax.set_ylabel('Precipitation Error (mm/hr)')
 plt.tight_layout()
 
 
 plt.figure(figsize=(7, 4))
-plt.plot(r * 111.111, np.nanmean(pre_precip_polar_mean.T, axis=1), 'r', label='LULC 2001')
-plt.plot(r * 111.111, np.nanmean(post_precip_polar_mean.T, axis=1), 'b', label='LULC 2017')
+plt.plot(r * 111.111, np.nanmean(pre_precip_polar_mean.T, axis=1),
+         'r', label='LULC 2001')
+plt.plot(r * 111.111, np.nanmean(post_precip_polar_mean.T, axis=1),
+         'b', label='LULC 2017')
 plt.xlabel("Radius from the storm center (km)")
 plt.ylabel("Precipation")
 plt.tight_layout()
@@ -195,15 +201,13 @@ plt.legend()
 plt.xlim((0, np.round(r.max() * 111.11)))
 
 
-
 plt.figure(figsize=(7, 4))
-plt.plot(r * 111.111, np.nanmean(post_precip_polar_mean.T - pre_precip_polar_mean.T, axis=1), 'r', label='LULC 2001')
-#plt.plot(r * 111.111, np.nanmean(post_precip_polar_mean.T, axis=1), 'b', label='LULC 2017')
+plt.plot(r * 111.111, np.nanmean(post_precip_polar_mean.T -
+         pre_precip_polar_mean.T, axis=1), 'r', label='LULC 2001')
+# plt.plot(r * 111.111, np.nanmean(post_precip_polar_mean.T, axis=1), 'b', label='LULC 2017')
 plt.xlabel("Radius from the storm center (km)")
 plt.ylabel("Precipation")
 plt.tight_layout()
 plt.legend()
 plt.xlim((0, np.round(r.max() * 111.11)))
 plt.show()
-
-

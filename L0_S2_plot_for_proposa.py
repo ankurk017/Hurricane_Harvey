@@ -1,3 +1,7 @@
+import matplotlib as mpl
+import tropycal.tracks as tracks
+from netCDF4 import Dataset
+from wrf import getvar, latlon_coords
 import numpy as np
 import matplotlib.pyplot as plt
 import glob
@@ -11,7 +15,8 @@ from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 import cartopy.crs as ccrs
 import matplotlib.patches as patches
 
-plt.rcParams.update({"font.size": 14, "font.weight": "bold", "savefig.dpi": 300})
+plt.rcParams.update(
+    {"font.size": 14, "font.weight": "bold", "savefig.dpi": 300})
 
 
 def plot_domain(dbb, margin=4):
@@ -53,7 +58,8 @@ def plot_domain(dbb, margin=4):
     return ax
 
 
-geog_files = sorted(glob.glob("/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WPS/geo_em.d0*nc"))
+geog_files = sorted(glob.glob(
+    "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WPS/geo_em.d0*nc"))
 A = xr.open_dataset(geog_files[0])
 
 
@@ -68,41 +74,35 @@ def get_bb(file_name):
     )
 
 
-## from wrfout
-wrfoutfile = sorted(glob.glob('/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/post/WRF_9-3-51/WRFV4/wrfout_d01_2017-*'))
+# from wrfout
+wrfoutfile = sorted(glob.glob(
+    '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/post/WRF_9-3-51/WRFV4/wrfout_d01_2017-*'))
 
-from wrf import getvar, latlon_coords
-from netCDF4 import Dataset
 
 slp = getvar(Dataset(wrfoutfile[0]), "slp")
 wrf_lat, wrf_lon = latlon_coords(slp)
 
 
-
-
-import tropycal.tracks as tracks
-import matplotlib as mpl
-
-basin = tracks.TrackDataset(basin='north_atlantic',source='hurdat',include_btk=False)
-hurdat = basin.get_storm(('harvey',2017))
+basin = tracks.TrackDataset(basin='north_atlantic',
+                            source='hurdat', include_btk=False)
+hurdat = basin.get_storm(('harvey', 2017))
 
 cmap = plt.cm.jet
 bounds = [0, 32, 64, 83, 96, 113, 137, 150]
 norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
 
 d1bb = get_bb(xr.open_dataset(geog_files[0]))
-d1bb[0]=-105
+d1bb[0] = -105
 d2bb = get_bb(xr.open_dataset(geog_files[1]))
 d3bb = [-94, -89, 19.5, 24]
 
-ax  =plot_domain((d1bb, d2bb, d3bb), margin=5)
+ax = plot_domain((d1bb, d2bb, d3bb), margin=5)
 ax.plot(hurdat['lon'], hurdat['lat'], "k")
-#ax.contourf(wrf_lon, wrf_lat, slp)
-scatter = ax.scatter(hurdat['lon'], hurdat['lat'], c=hurdat['vmax'], cmap=cmap, norm=norm)
+# ax.contourf(wrf_lon, wrf_lat, slp)
+scatter = ax.scatter(hurdat['lon'], hurdat['lat'],
+                     c=hurdat['vmax'], cmap=cmap, norm=norm)
 cbar = plt.colorbar(scatter, ax=ax)
 cbar.ax.set_ylabel('10 m sustained Wind Speed (knots)')
 plt.tight_layout()
 plt.savefig('../figures/Track_Harvey.jpeg')
 plt.show()
-
-
