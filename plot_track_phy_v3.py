@@ -41,17 +41,25 @@ plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
 
 
 wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WRFV4/'
-wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[25:25+48]
+wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[25:25+48][::3]
 
 # wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy02/'
 
 # wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01/'
 # wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[25:25+48]
 
+wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01_no_moving_domain/WRF/test/em_real/'
+wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d02*"))
+
+wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WRFV4_test_may19/wrfout_2doms/'
+wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d02*"))
 
 wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01/'
 wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/post/WRF_9-3-51/WRFV4/'
 wrfoutfile_post = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[25:25+48]
+
+wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WRFV4_test_may19/'
+wrfoutfile_post = sorted(glob.glob(wrf_runs + "wrfout_d03*"))
 
 # wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01c_new_config/'
 # wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01d_new_config_from_paper/'
@@ -60,7 +68,7 @@ wrfoutfile_post = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[25:25+48]
 
 
 basin = tracks.TrackDataset(basin='north_atlantic',
-                            source='hurdat', include_btk=False)
+                            source='ibtracs', include_btk=False)
 harvey = basin.get_storm(('harvey', 2017))
 
 
@@ -108,6 +116,7 @@ obs_ws = xr.concat(ws_max, dim="time")
 # wrf_ida_lonlat_land = [is_land(lon, lat) for lon, lat in zip(track_lon, track_lat)]
 # ida_wrf_landfall_time = mslp_timeseries.isel(time=42)["Time"].values
 
+"""
 # calculating the time series error
 
 model_ws = np.array([harvey['vmax'][np.where(harvey['date'] == pd.to_datetime(
@@ -136,45 +145,52 @@ model1_sp_error = (model_ws[np.array([ws.shape[0] != 0 for ws in model_ws])]-(
 sp_error_var = f'MSLP Error: {model1_sp_error}, {model2_sp_error}'
 
 
+"""
 # axs.plot(values["Time"], values, "b-")
 
-fig, axs = plt.subplots(figsize=(10, 5))
+fig, axs = plt.subplots(figsize=(8, 4))
 axs.plot(ws_timeseries["Time"], ws_timeseries*1.95, "r", label="LULC 2001")
 
 axs.plot(obs_ws["Time"],
          obs_ws*1.95, "b", label="LULC 2017")
 
 axs.plot(harvey['date'], harvey['vmax'], "k-", label="OBS")
+axs.plot([harvey['date'][42], harvey['date'][42]], [10, 120], 'b--')
 # plt.legend()
 axs.set_xlabel("Date")
 axs.set_ylabel("10 m Wind Speed (knots)")
-axs.set_xlim((harvey['date'][33], harvey['date'][54]))
+axs.set_xlim((harvey['date'][33], harvey['date'][50]))
+axs.set_ylim((10, 120))
+
+
 myFmt = mdates.DateFormatter('%m-%d')
 myFmt = mdates.DateFormatter('%dZ%H')
 axs.xaxis.set_major_formatter(myFmt)
-plt.title(ws_error_var)
+#plt.title(ws_error_var)
 plt.tight_layout()
-# plt.savefig('../figures/WS.jpeg')
+plt.savefig('../figures/May22_WS.jpeg')
 
-fig, axs = plt.subplots(figsize=(10, 5))
+fig, axs = plt.subplots(figsize=(8, 4))
 axs.plot(mslp_timeseries["Time"], mslp_timeseries, "r", label="LULC 2001")
 
 axs.plot(obs_slp["Time"],
          obs_slp, "b", label="LULC 2017")
 
 axs.plot(harvey['date'], harvey['mslp'], "k-", label="OBS")
+axs.plot([harvey['date'][42], harvey['date'][42]], [922, 1008], 'b--')
 # plt.legend()
 # axs.set_xticks(rotation=45)
 axs.set_xlabel("Date")
 axs.set_ylabel("MSLP (hPa)")
-axs.set_xlim((harvey['date'][33], harvey['date'][54]))
+axs.set_xlim((harvey['date'][33], harvey['date'][50]))
+axs.set_ylim((922, 1008))
 # myFmt = mdates.DateFormatter('%m-%d')
 myFmt = mdates.DateFormatter('%dZ%H')
 axs.xaxis.set_major_formatter(myFmt)
 
-plt.title(sp_error_var)
+#plt.title(sp_error_var)
 plt.tight_layout()
-# plt.savefig('../figures/MSLP.jpeg')
+plt.savefig('../figures/May22_MSLP.jpeg')
 
 # plt.show()
 
@@ -184,14 +200,31 @@ plt.tight_layout()
 
 
 # PLOT TRACK
+shapefile_path = "/rhome/akumar/Downloads/Houston/COH_ADMINISTRATIVE_BOUNDARY_-_MIL.shp"
+reader = shpreader.Reader(shapefile_path)
+geometries = reader.geometries()
 
 
-fig = plt.figure(figsize=(12, 6))
+
+
+fig = plt.figure(figsize=(8, 6))
 ax = plt.axes(projection=ccrs.PlateCarree())
 coast.plot_coast(ax)
+for geometry in geometries:
+    ax.add_geometries([geometry], ccrs.PlateCarree(),
+                         facecolor='none', edgecolor='blue')
 ax.plot(harvey['lon'], harvey['lat'], 'k-', label='OBS')
-ax.plot(track_lon[6:], track_lat[6:], 'r-', label='2001')
-ax.plot(track_lon_phy[6:-3], track_lat_phy[6:-3], 'b-', label='2017')
-# plt.legend()
+ax.plot(track_lon[6:], track_lat[6:], 'r-', label='3 km (9-3 km moving)')
+ax.plot(track_lon_phy, track_lat_phy, 'b-', label='1 km (9-3-1 km moving)')
+
+gl = ax.gridlines(draw_labels=True)
+gl.right_labels = False
+gl.top_labels = False
+ax.set_xlim([-102, -83])  
+ax.set_ylim([18, 35]) 
+plt.legend(loc='upper left')
+
 plt.tight_layout()
+plt.savefig('../figures/May22_Harvey_track.jpeg')
 plt.show()
+

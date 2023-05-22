@@ -72,5 +72,3 @@ uv_cs['tangential'].plot(ax=axs[1], yincrease=False)
 plt.tight_layout()
 
 plt.show()
-
-

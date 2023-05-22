@@ -56,22 +56,23 @@ uv_xr = uv_xr.rename({"south_north": "lat", "west_east": "lon"})
 uv_xr = uv_xr.assign_coords(lat=uv_xr['lat'].values-cen_loc[1])
 uv_xr = uv_xr.assign_coords(lon=uv_xr['lon'].values-cen_loc[0])
 
-### convert to polar
+# convert to polar
 lon = uv_xr['lon'].values
 lat = uv_xr['lat'].values
-data = uv_xr['ua_interp'].sel(level=850).values 
+data = uv_xr['ua_interp'].sel(level=850).values
 
 r = np.arange(0, 2, 0.1)
-ang = np.arange(0 ,361, 1)*np.pi/180
+ang = np.arange(0, 361, 1)*np.pi/180
 r_m, ang_m = np.meshgrid(r, ang)
 
 x = r_m*np.cos(ang_m)
 y = r_m*np.sin(ang_m)
 
 pcp_polar = np.ones(x.shape)
-pcp_polar[:]=np.NaN
+pcp_polar[:] = np.NaN
 
-interp = RegularGridInterpolator((lat, lon), data, bounds_error=False, fill_value=None)
+interp = RegularGridInterpolator(
+    (lat, lon), data, bounds_error=False, fill_value=None)
 ws = interp((x, y))
 
 ###############
@@ -95,5 +96,3 @@ uv_cs['tangential'].plot(ax=axs[1], yincrease=False)
 plt.tight_layout()
 
 plt.show()
-
-

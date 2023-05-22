@@ -47,7 +47,7 @@ def wrf_assign_coords(var):
 
 
 pre_files = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WRFV4/"
-post_files = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/post/WRF_9-3-51/WRFV4/"
+
 
 
 wrfoutfile = sorted(glob.glob(pre_files + "wrfout_d02*-25_*"))
@@ -95,7 +95,6 @@ for timeid in progressbar.progressbar(range(len(wrfoutfile) - 1)):
     resolution = np.unique(np.round(np.diff(lon_1d), 2))[0]
     r, ang, var_polar = var_cropped_polar = convert_polar(
         var_cropped, margin=margin)
-    print(" \n")
     precip_polar.append(var_polar)
     r34.append(
         np.nanmean(

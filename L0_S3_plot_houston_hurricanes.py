@@ -10,6 +10,8 @@ import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
+import cartopy.feature as cfeature
+import cartopy.io.shapereader as shpreader
 
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 import cartopy.crs as ccrs
@@ -20,10 +22,22 @@ plt.rcParams.update(
 
 
 def plot_domain(dbb, margin=4):
-    fig = plt.figure(figsize=(12, 8))
+    fig = plt.figure(figsize=(10, 7))
     ax = plt.axes(projection=ccrs.PlateCarree())
     ax.stock_img()
     ax.coastlines(resolution="10m")
+
+
+    # Plot state coastlines
+    states_provinces = cfeature.NaturalEarthFeature(
+        category='cultural',
+        name='admin_1_states_provinces_lines',
+        scale='10m',
+        facecolor='none'
+    )
+    ax.add_feature(states_provinces, edgecolor='gray')
+    
+
 
     def draw_box(bb):
         return patches.Rectangle(
@@ -95,32 +109,39 @@ d1bb = get_bb(xr.open_dataset(geog_files[0]))
 d1bb[0] = -105
 d2bb = get_bb(xr.open_dataset(geog_files[1]))
 d3bb = [-94, -89, 19.5, 24]
+d1bb = [-100, -85, 23, 35]
 
 
-def plot_hurr_track(ax, year=2017, name='harvey'):
+def plot_hurr_track(ax, year=2017, name='harvey', linestyle='dashed', color='k'):
     hurdat = basin.get_storm((name, year))
-    ax.plot(hurdat['lon'], hurdat['lat'], "k")
-    scatter = ax.scatter(hurdat['lon'], hurdat['lat'],
+    ax.plot(hurdat['lon'], hurdat['lat'], color, linewidth=2, linestyle=linestyle, label=f'{name.capitalize()} ({year})')
+    scatter = ax.scatter(hurdat['lon'], hurdat['lat'], 70,
                          c=hurdat['vmax'], cmap=cmap, norm=norm)
     return scatter
 
 
-ax = plot_domain((d1bb, d2bb, d3bb), margin=5)
-# ax  =plot_domain((d1bb,), margin=5)
+#ax = plot_domain((d1bb, d2bb, d3bb), margin=5)
+ax = plot_domain((d1bb,), margin=1)
+# PLOT TRACK
+shapefile_path = "/rhome/akumar/Downloads/Houston/COH_ADMINISTRATIVE_BOUNDARY_-_MIL.shp"
+reader = shpreader.Reader(shapefile_path)
+geometries = reader.geometries()
 
-scatter = plot_hurr_track(ax, year=2017, name='harvey')
-scatter = plot_hurr_track(ax, year=2021, name='ida')
-scatter = plot_hurr_track(ax, year=2020, name='laura')
-scatter = plot_hurr_track(ax, year=2020, name='delta')
-# Landfall over Bahamas
-scatter = plot_hurr_track(ax, year=2019, name='dorian')
-scatter = plot_hurr_track(ax, year=2018, name='florence')
-scatter = plot_hurr_track(ax, year=2018, name='michael')
-scatter = plot_hurr_track(ax, year=2017, name='irma')
-scatter = plot_hurr_track(ax, year=2016, name='matthew')
+#coast.plot_coast(ax)
+for geometry in geometries:
+    ax.add_geometries([geometry], ccrs.PlateCarree(),
+                         facecolor='none', edgecolor='blue')
 
+
+scatter = plot_hurr_track(ax, year=1983, name='alicia', linestyle='dashed', color='r')
+scatter = plot_hurr_track(ax, year=2017, name='harvey', linestyle='solid')
+scatter = plot_hurr_track(ax, year=2020, name='laura', linestyle='dotted')
+scatter = plot_hurr_track(ax, year=2008, name='ike', linestyle='dashed')
+scatter = plot_hurr_track(ax, year=2005, name='rita', linestyle='dashdot')
+
+plt.legend()
 cbar = plt.colorbar(scatter, ax=ax)
 cbar.ax.set_ylabel('10 m sustained Wind Speed (knots)')
 plt.tight_layout()
-#plt.savefig('../figures/Track_all_hurricanes.jpeg')
+plt.savefig('../figures/May22_Track_Houston_hurricanes.jpeg')
 plt.show()

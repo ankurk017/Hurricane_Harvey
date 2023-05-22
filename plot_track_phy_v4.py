@@ -40,16 +40,15 @@ import tropycal.tracks as tracks
 plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
 
 
-wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WRFV4/'
-wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[25:25+48]
+wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF/WRF/'
+wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d01*"))
 
-wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/post/WRF_9-3-51/WRFV4/'
-wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_Quals/WRF_cropland/WRF/'
-wrfoutfile_post = sorted(glob.glob(wrf_runs + "wrfout_d02*"))[::3]
+wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF/WRF/'
+wrfoutfile_post = sorted(glob.glob(wrf_runs + "wrfout_d02*"))
 
 
 basin = tracks.TrackDataset(basin='north_atlantic',
-                            source='hurdat', include_btk=False)
+                            source='ibtracs', include_btk=False)
 harvey = basin.get_storm(('harvey', 2017))
 
 
@@ -98,7 +97,7 @@ obs_ws = xr.concat(ws_max, dim="time")
 # ida_wrf_landfall_time = mslp_timeseries.isel(time=42)["Time"].values
 
 # calculating the time series error
-
+"""
 model_ws = np.array([harvey['vmax'][np.where(harvey['date'] == pd.to_datetime(
     str(val.values)).to_pydatetime())[0]] for val in obs_slp["Time"]], dtype='object')
 model2_ws_error = (model_ws[np.array([ws.shape[0] != 0 for ws in model_ws])]-(
@@ -123,7 +122,7 @@ model1_sp_error = (model_ws[np.array([ws.shape[0] != 0 for ws in model_ws])]-(
     mslp_timeseries[np.array([ws.shape[0] != 0 for ws in model_ws])]).values).mean()
 
 sp_error_var = f'MSLP Error: {model1_sp_error}, {model2_sp_error}'
-
+"""
 
 # axs.plot(values["Time"], values, "b-")
 
@@ -134,14 +133,13 @@ axs.plot(obs_ws["Time"],
          obs_ws*1.95, "b", label="LULC 2017")
 
 axs.plot(harvey['date'], harvey['vmax'], "k-", label="OBS")
-# plt.legend()
 axs.set_xlabel("Date")
 axs.set_ylabel("10 m Wind Speed (knots)")
-axs.set_xlim((harvey['date'][33], harvey['date'][54]))
+#axs.set_xlim((harvey['date'][33], harvey['date'][54]))
 myFmt = mdates.DateFormatter('%m-%d')
 myFmt = mdates.DateFormatter('%dZ%H')
 axs.xaxis.set_major_formatter(myFmt)
-plt.title(ws_error_var)
+#plt.title(ws_error_var)
 plt.tight_layout()
 # plt.savefig('../figures/WS.jpeg')
 
@@ -156,12 +154,12 @@ axs.plot(harvey['date'], harvey['mslp'], "k-", label="OBS")
 # axs.set_xticks(rotation=45)
 axs.set_xlabel("Date")
 axs.set_ylabel("MSLP (hPa)")
-axs.set_xlim((harvey['date'][33], harvey['date'][54]))
+#axs.set_xlim((harvey['date'][33], harvey['date'][54]))
 # myFmt = mdates.DateFormatter('%m-%d')
 myFmt = mdates.DateFormatter('%dZ%H')
 axs.xaxis.set_major_formatter(myFmt)
 
-plt.title(sp_error_var)
+#plt.title(sp_error_var)
 plt.tight_layout()
 # plt.savefig('../figures/MSLP.jpeg')
 
