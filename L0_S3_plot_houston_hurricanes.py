@@ -97,9 +97,11 @@ slp = getvar(Dataset(wrfoutfile[0]), "slp")
 wrf_lat, wrf_lon = latlon_coords(slp)
 
 
-basin = tracks.TrackDataset(basin='north_atlantic',
+#basin = tracks.TrackDataset(basin='north_atlantic',
 #                            source='hurdat', include_btk=False)
-                            source='ibtracs', include_btk=False)
+#                            source='ibtracs', include_btk=False)
+url = "https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2022-042723.txt"
+basin = tracks.TrackDataset(basin='north_atlantic', atlantic_url=url)
 
 cmap = plt.cm.jet
 bounds = [0, 32, 64, 83, 96, 113, 137, 150]

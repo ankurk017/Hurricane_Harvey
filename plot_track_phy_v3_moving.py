@@ -40,34 +40,13 @@ import tropycal.tracks as tracks
 plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
 
 
-wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WRFV4/'
-wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[25:25+48][::3]
-
-# wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy02/'
-
-# wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01/'
-# wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[25:25+48]
 
 wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01_no_moving_domain/WRF/test/em_real/'
-wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d02*"))
-
-wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WRFV4_test_may19/wrfout_2doms/'
-wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d02*"))
-
-wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WRFV4_test_may23/'
 wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d02*"))[::3]
 
-wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01/'
-wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/post/WRF_9-3-51/WRFV4/'
-wrfoutfile_post = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[25:25+48]
 
 wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WRFV4_test_may19/'
 wrfoutfile_post = sorted(glob.glob(wrf_runs + "wrfout_d03*"))[::5]
-
-# wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01c_new_config/'
-# wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01d_new_config_from_paper/'
-# wrf_runs = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/test_phy/WRF_9-3-51/WRFV4_phy01_no_moving_domain/WRF/test/em_real/'
-# wrfoutfile_post = sorted(glob.glob(wrf_runs + "wrfout_d02*"))
 
 
 basin = tracks.TrackDataset(basin='north_atlantic',
@@ -194,7 +173,7 @@ axs[1].xaxis.set_major_formatter(myFmt)
 
 #plt.title(sp_error_var)
 plt.tight_layout()
-plt.savefig('../figures/May22_Intensity.jpeg')
+plt.savefig('../figures/May22_Intensity_nomoving.jpeg')
 
 # plt.show()
 
@@ -218,7 +197,7 @@ for geometry in geometries:
     ax.add_geometries([geometry], ccrs.PlateCarree(),
                          facecolor='none', edgecolor='blue')
 ax.plot(harvey['lon'], harvey['lat'], 'k-', label='OBS')
-ax.plot(track_lon[6:], track_lat[6:], 'r-', label='3 km (9-3 km moving)')
+ax.plot(track_lon[6:], track_lat[6:], 'r-', label='1 km (9-3-1 km no-moving)')
 ax.plot(track_lon_phy, track_lat_phy, 'b-', label='1 km (9-3-1 km moving)')
 
 gl = ax.gridlines(draw_labels=True)
@@ -229,6 +208,6 @@ ax.set_ylim([18, 35])
 plt.legend(loc='upper left')
 
 plt.tight_layout()
-plt.savefig('../figures/May22_Harvey_track.jpeg')
+plt.savefig('../figures/May22_Harvey_track_nomoving.jpeg')
 plt.show()
 
