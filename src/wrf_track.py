@@ -55,7 +55,7 @@ def plot_track_intensity(harvey, track_details_array, labels, colors):
     #    axs[0].plot([harvey["date"][42], harvey["date"][42]], [10, 150], "b--")
     axs[0].set_xlabel("Date")
     axs[0].set_ylabel("10 m Wind Speed (knots)")
-    axs[0].set_xlim((harvey["date"][33], harvey["date"][50]))
+    axs[0].set_xlim((harvey["date"][33], harvey["date"][-1]))
     #    axs[0].set_ylim((10, 150))
     myFmt = mdates.DateFormatter("%dZ%H")
     axs[0].xaxis.set_major_formatter(myFmt)
@@ -70,7 +70,7 @@ def plot_track_intensity(harvey, track_details_array, labels, colors):
     #    axs[1].plot([harvey["date"][42], harvey["date"][42]], [880, 1008], "b--")
     axs[1].set_xlabel("Date")
     axs[1].set_ylabel("MSLP (hPa)")
-    axs[1].set_xlim((harvey["date"][33], harvey["date"][50]))
+    axs[1].set_xlim((harvey["date"][33], harvey["date"][-1]))
     #    axs[1].set_ylim((880, 1008))
     myFmt = mdates.DateFormatter("%dZ%H")
     axs[1].xaxis.set_major_formatter(myFmt)
@@ -84,7 +84,7 @@ def plot_track(harvey, track_details_array, labels, colors):
     reader = shpreader.Reader(shapefile_path)
     geometries = reader.geometries()
 
-    fig = plt.figure(figsize=(8, 6))
+    fig = plt.figure(figsize=(9, 7))
     ax = plt.axes(projection=ccrs.PlateCarree())
     coast.plot_coast(ax)
     for geometry in geometries:
@@ -103,8 +103,10 @@ def plot_track(harvey, track_details_array, labels, colors):
     gl = ax.gridlines(draw_labels=True)
     gl.right_labels = False
     gl.top_labels = False
-    ax.set_xlim([-102, -83])
-    ax.set_ylim([18, 35])
+#    ax.set_xlim([-102, -87.5])
+    ax.set_xlim([-99, -92])
+#    ax.set_ylim([22.5, 35])
+    ax.set_ylim([26, 31])
     plt.legend(loc="upper left")
 
     plt.tight_layout()
