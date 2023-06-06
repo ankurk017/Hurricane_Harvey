@@ -13,18 +13,24 @@ from scipy.interpolate import griddata
 
 plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
 
-date = '26'
+date = '28'
+case = 'post'
+
 home = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/AHPS/"
 
 ahps_files = glob.glob(home + "nws_precip*_conus.nc")
+home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/'
+
 
 wrfoutfile = sorted(glob.glob(
     '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/post/WRF_9-3-51/WRFV4/wrfout_d01_2017-*27*'))
 wrfoutfile = sorted(glob.glob(
     f'/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_mov1_GFS_IC25_12UTC/WRFV4_mp10_cu06/wrfout_d01_2017-*{date}*'))
 
-#wrfoutfile = sorted(glob.glob(
-#    f'/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_mov1_GFS_IC25_12UTC/WRFV4_mp10_cu06_1doms_BEM/wrfout_d01_2017-*{date}*'))
+wrfoutfile = sorted(glob.glob(
+    f'/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_mov1_GFS_IC25_12UTC/WRFV4_mp10_cu06/wrfout_d01_2017-*{date}*'))
+
+wrfoutfile = sorted(glob.glob(home_2512 + f'/WRF_mov1_GFS_IC25_12UTC_v2/{case}/WRF_mp10_cu05_no_ocean_physics/wrfout_d01_2017-*{date}*'))
 
 
 wrf_pcp = (
@@ -42,7 +48,7 @@ ahps_lon, ahps_lat, ahps_pcp = ahps.read_ahps(ahps_files[ahps_fileid])
 
 
 domain_bb = [-100, -93, 25.5, 31.5]
-levels = np.array((0.1, 10, 20, 30, 40, 50, 100, 150, 200, 250, 300, 400, 500))
+levels = np.array((0.1, 10, 20, 30, 40, 50, 100, 150, 200, 250, 300, 400, 500, 600, 700))
 
 fig, ax = plt.subplots(
     1, 2, figsize=(14, 5), sharey=True, subplot_kw={"projection": ccrs.PlateCarree()},
@@ -115,12 +121,48 @@ def correlation_without_nans(array1, array2):
 rms = rmse(ahps_pcp_domain.ravel(), wrf_pcp_domain.ravel())
 cor = correlation_without_nans(ahps_pcp_domain.ravel(), wrf_pcp_domain.ravel())
 #print(rms, cor)
-title = f"{ahps_files[ahps_fileid].split('/')[-1].split('_')[-2]} | RMSE: {np.round(rms, 2)}, R: {np.round(cor, 2)}"
+title = f"{ahps_files[ahps_fileid].split('/')[-1].split('_')[-2]} | {case} | RMSE: {np.round(rms, 2)}, R: {np.round(cor, 2)}"
 
 plt.title(title)
-plt.savefig(f"../figures/1km_AHPS_post_pcp_{ahps_files[ahps_fileid].split('/')[-1].split('_')[-2]}.jpeg")
+plt.savefig(f"../figures/2km_AHPS_{case}_pcp_{ahps_files[ahps_fileid].split('/')[-1].split('_')[-2]}.jpeg")
+#plt.show()
+
+########## plotting differenbce
+levels = np.arange(-500, 500, 50)
+fig, ax = plt.subplots(
+    1, 1, figsize=(8, 5), sharey=True, subplot_kw={"projection": ccrs.PlateCarree()},
+)
+cont = ax.contourf(merged_lons, merged_lats, wrf_pcp_domain-ahps_pcp_domain,
+                      levels=levels, cmap='bwr')
+
+shapefile_path = "/rhome/akumar/Downloads/Houston/COH_ADMINISTRATIVE_BOUNDARY_-_MIL.shp"
+reader = shpreader.Reader(shapefile_path)
+geometries = reader.geometries()
+
+for geometry in geometries:
+    ax.add_geometries([geometry], ccrs.PlateCarree(),
+                         facecolor='none', edgecolor='blue')
+
+coast.plot_coast(ax)
 
 
+ax.set_xlim((domain_bb[0], domain_bb[1]))
+ax.set_ylim((domain_bb[2], domain_bb[3]))
+ax.set_title('WRF (LULC 2017)')
+cbar = plt.colorbar(cont, ax=ax, ticks=levels)
+cbar.ax.set_yticklabels(levels)
+cbar.ax.set_ylabel('Precipitation Error (mm)')
+title = f"{ahps_files[ahps_fileid].split('/')[-1].split('_')[-2]} | {case} | RMSE: {np.round(rms, 2)}, R: {np.round(cor, 2)}"
+plt.title(title)
+plt.savefig(f"../figures/Diff_2km_AHPS_{case}_pcp_{ahps_files[ahps_fileid].split('/')[-1].split('_')[-2]}.jpeg")
+#plt.show()
+
+
+
+
+
+
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
@@ -129,7 +171,7 @@ data = wrf_pcp_domain.ravel()-ahps_pcp_domain.ravel()
 data = data[~np.isnan(data)]
 params = stats.norm.fit(data)
 dist = stats.norm(*params)
-
+plt.figure()
 x = np.linspace(data.min(), data.max(), 100)
 pdf = dist.pdf(x)
 plt.plot(x, pdf, label='PDF')
@@ -143,6 +185,7 @@ plt.legend()
 
 # Show the plot
 plt.show()
+"""
 
 
 
