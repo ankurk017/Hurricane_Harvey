@@ -87,15 +87,45 @@ wrfoutfile11post = sorted(glob.glob(wrf_runs + "wrfout_d02*"))
 wrf_runs = home_2512 + '/WRF_mov1_GFS_IC26_00UTC/WRF_mp10_cu05_no_ocean_physics/'
 wrfoutfile6_ic2600 = sorted(glob.glob(wrf_runs + "wrfout_d02*"))
 
-out1a = src.wrf_track.get_track_details(wrfoutfile1a)
-out1b = src.wrf_track.get_track_details(wrfoutfile1b)
-out1c = src.wrf_track.get_track_details(wrfoutfile1c)
-out1d = src.wrf_track.get_track_details(wrfoutfile1d)
-out1e = src.wrf_track.get_track_details(wrfoutfile1e)
-out1f = src.wrf_track.get_track_details(wrfoutfile1f)
-out1g = src.wrf_track.get_track_details(wrfoutfile1g)
-out1h = src.wrf_track.get_track_details(wrfoutfile1h)
-out1i = src.wrf_track.get_track_details(wrfoutfile1i)
+wrf_runs = home_2512 + 'WRFV45/WRF/test/em_real/'
+wrfoutfile_wrf45 = sorted(glob.glob(wrf_runs + "wrfout_d01*"))
+wrf_runs = home_2512 + 'WRFV45_FNL/WRF/test/em_real/old/'
+wrf_runs = home_2512 + 'WRFV45_FNL/WRF/test/em_real/'
+wrf_runs = home_2512 + 'WRFV45_FNL_2518/WRF/test/em_real/'
+wrf_runs = home_2512 + 'WRFV45_FNL_2518/WRF_old/test/em_real/'
+wrfoutfile_wrf45_fnl = sorted(glob.glob(wrf_runs + "wrfout_d01*"))
+
+wrf_runs = home_2512 + 'WRF_mov1_FNL_2512/WRFV4_mp10_cu06/'
+wrfoutfile_wrf43_fnl = sorted(glob.glob(wrf_runs + "wrfout_d01*"))[::5]
+
+
+wrf_runs = home_2512 + 'WRFV45_FNL_2518/WRF_old_2doms/test/em_real/'
+wrfoutfile_wrf43_fnl_dom2 = sorted(glob.glob(wrf_runs + "wrfout_d02*"))
+wrfoutfile_wrf43_fnl_dom1 = sorted(glob.glob(wrf_runs + "wrfout_d01*"))
+
+#wrf_runs = home_2512 + 'WRF_FNL_2612/WRF/test/em_real/'
+#wrfoutfile_ic2612a = sorted(glob.glob(wrf_runs + "wrfout_d01*"))
+#wrfoutfile_ic2612b = sorted(glob.glob(wrf_runs + "wrfout_d02*"))
+
+
+home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V3/WRF_Simulations/'
+wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/WRF_HRRR_sim01_pre/WRF/test/em_real/wrfout_d01_2017-*'))
+wrfoutfile_post = sorted(glob.glob(home_2512 + f'/WRF_HRRR_sim01_post/WRF/test/em_real/wrfout_d01_2017-*'))
+
+home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2612/'
+wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre/WRF_2dom/test/em_real/wrfout_d02_2017-*'))
+wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post/WRF_2dom/test/em_real/wrfout_d02_2017-*'))
+
+
+#out1a = src.wrf_track.get_track_details(wrfoutfile1a)
+#out1b = src.wrf_track.get_track_details(wrfoutfile1b)
+#out1c = src.wrf_track.get_track_details(wrfoutfile1c)
+#out1d = src.wrf_track.get_track_details(wrfoutfile1d)
+#out1e = src.wrf_track.get_track_details(wrfoutfile1e)
+#out1f = src.wrf_track.get_track_details(wrfoutfile1f)
+#out1g = src.wrf_track.get_track_details(wrfoutfile1g)
+#out1h = src.wrf_track.get_track_details(wrfoutfile1h)
+#out1i = src.wrf_track.get_track_details(wrfoutfile1i)
 
 #out3 = src.wrf_track.get_track_details(wrfoutfile3[::2])
 #out3a = src.wrf_track.get_track_details(wrfoutfile3a[::3])
@@ -116,12 +146,32 @@ out1i = src.wrf_track.get_track_details(wrfoutfile1i)
 #out11_post = src.wrf_track.get_track_details(wrfoutfile11post[::1])
 #out12_ic26 = src.wrf_track.get_track_details(wrfoutfile6_ic2600)
 
+#out2518pre = src.wrf_track.get_track_details(wrfoutfile_ic2518pre)
+#out2518post = src.wrf_track.get_track_details(wrfoutfile_ic2518post)
+#out_wrfoutfile_wrf45 = src.wrf_track.get_track_details(wrfoutfile_wrf45)
+#out_wrfoutfile_wrf45_fnl = src.wrf_track.get_track_details(wrfoutfile_wrf45_fnl)
+#out_wrfoutfile_wrf43_fnl = src.wrf_track.get_track_details(wrfoutfile_wrf43_fnl)
+#out_wrfoutfile_wrf45_fnl_dom2 = src.wrf_track.get_track_details(wrfoutfile_wrf43_fnl_dom2)
+#out_wrfoutfile_wrf45_fnl_dom1 = src.wrf_track.get_track_details(wrfoutfile_wrf43_fnl_dom1)
+#out_wrfoutfile_ic2612a = src.wrf_track.get_track_details(wrfoutfile_ic2612a)
+#out_wrfoutfile_ic2612b = src.wrf_track.get_track_details(wrfoutfile_ic2612b)
+
+out_wrfoutfile_pre = src.wrf_track.get_track_details(wrfoutfile_pre)
+out_wrfoutfile_post = src.wrf_track.get_track_details(wrfoutfile_post)
+out = (out_wrfoutfile_pre, out_wrfoutfile_post)
+
+#out = (out2518pre, out2518post)
+#out = (out_wrfoutfile_wrf45, out_wrfoutfile_wrf45_fnl, out_wrfoutfile_wrf43_fnl)
+#out = (out_wrfoutfile_wrf45_fnl, out_wrfoutfile_wrf43_fnl)
+#out = (out_wrfoutfile_wrf45_fnl_dom1, out_wrfoutfile_wrf45_fnl_dom2)
+#out = (out_wrfoutfile_ic2612a,  out_wrfoutfile_ic2612b)
+#out = (out_wrfoutfile_ic2612a,  )
 #out = (out7, out10a, out10b, out10c)
 #out = (out3, out3a, out3b) # works like a charm  ########## YEAHHHHHHHH
 #out = (out3, out3aa, out3ab, out3ac) # this is also good 
 #out = (out3, out3aa, out3ab, out3ab_noocean) # this is also good 
 #out = (out3, out11_def, out11_pre, out11_post, out12_ic26) # latest siulations - best pre and post
-out = (out11_def, out11_pre, out11_post) # latest siulations - best pre and post
+#out = (out11_def, out11_pre, out11_post) # latest siulations - best pre and post
 #out = (out3,out8, out9 )
 #out = (out3, out6, out6a) # out7, out8)
 #out = (out5, out6, out6a) # out7, out8)
@@ -131,23 +181,24 @@ out = (out11_def, out11_pre, out11_post) # latest siulations - best pre and post
 #lab = ('WRFV4_mp10_cu06', '2dom cu01', '2dom cu05', '2dom cu05_nooncea')
 #lab = ('3doms', '2 doms def', '2 doms pre', '2 doms post', 'IC2600')
 lab = ('def 3km', 'pre 3km', 'post 3km')
+lab = ('IC2518_GFS', 'IC2518_FNL', 'post 3km')
 #lab = ('WRFV4_mp06_cu01', 'WRFV4_mp06_cu05', 'WRFV4_mp06_cu06', 'WRFV4_mp08_cu01', 'WRFV4_mp08_cu05', 'WRFV4_mp08_cu06', 'WRFV4_mp10_cu01', 'WRFV4_mp10_cu05', 'WRFV4_mp10_cu06',)
 #lab = ('WRFV4_mp10_cu06', 'WRFV4_mp10_cu06 1dom', 'WRFV4_mp10_cu06 2 dom', '18km', 'post')
 #lab = ('18km 1 dom', '18km 2 dom', '18km 3 dom')
-col = ("b", "g", 'r', 'm', 'c', 'y', 'olive', 'tomato', 'springgreen')
+col = ("r", "g", 'b', 'm', 'c', 'y', 'olive', 'tomato', 'springgreen')
 titles = 'set03'
 
 
 
 src.wrf_track.plot_track_intensity(harvey, out, labels=lab, colors=col)
-plt.savefig(f'../figures/{titles}_plot_intensity.jpeg')
+#plt.savefig(f'../figures/{titles}_plot_intensity.jpeg')
 src.wrf_track.plot_track(harvey, out, labels=lab, colors=col)
-plt.savefig(f'../figures/{titles}_plot_track.jpeg')
+#plt.savefig(f'../figures/{titles}_plot_track.jpeg')
  
-src.wrf_track.calculate_error(out, harvey)
-pd.DataFrame(src.wrf_track.calculate_error(out, harvey), index=lab[:len(out)]).to_csv(f'../figures/{titles}_track_stats.csv')
+#src.wrf_track.calculate_error(out, harvey)
+#pd.DataFrame(src.wrf_track.calculate_error(out, harvey), index=lab[:len(out)]).to_csv(f'../figures/{titles}_track_stats.csv')
 
-#plt.show()
+plt.show()
 
 """
 

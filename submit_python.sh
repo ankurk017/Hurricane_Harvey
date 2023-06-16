@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --mail-user=akumar@nsstc.uah.edu  
-#SBATCH -J CRIDA
-#SBATCH -p shared
+#SBATCH -J houston
+#SBATCH -p standard
 #SBATCH --ntasks 8
 #SBATCH -t 20-00:00
 #SBATCH --mem-per-cpu=2G
@@ -13,7 +13,7 @@
 
 export PATH="/rhome/akumar/anaconda3/envs/pywrf/bin:$PATH"
 
-python F1_S1_extract_rainfall.py
+python plot_vertical_cross_section_quiver.py
 #python india_locations_finer_for_districts_april03.py
 echo '**********Finished!**********'
 
