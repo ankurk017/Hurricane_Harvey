@@ -19,14 +19,15 @@ home_2512 = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V
 pre_files = sorted(
     glob.glob(
         home_2512
-        + f"/WRF_mov1_GFS_IC25_12UTC_v2/{case}/WRF_mp10_cu05_no_ocean_physics/wrfout_d01_2017-*"
+        + f"/WRF_FNL_2612/pre/WRF_2dom/test/em_real/wrfout_d01_2017-*"
     )
 )[::3]
+
 case = "post"
 post_files = sorted(
     glob.glob(
         home_2512
-        + f"/WRF_mov1_GFS_IC25_12UTC_v2/{case}/WRF_mp10_cu05_no_ocean_physics/wrfout_d01_2017-*"
+        + f"/WRF_FNL_2612/post/WRF_2dom/test/em_real/wrfout_d01_2017-*"
     )
 )[::3]
 

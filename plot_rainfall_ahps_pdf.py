@@ -13,7 +13,7 @@ from scipy.interpolate import griddata
 
 plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
 
-date = '28'
+date = '30'
 case = 'post'
 
 home = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/AHPS/"
@@ -31,6 +31,9 @@ wrfoutfile = sorted(glob.glob(
     f'/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_mov1_GFS_IC25_12UTC/WRFV4_mp10_cu06/wrfout_d01_2017-*{date}*'))
 
 wrfoutfile = sorted(glob.glob(home_2512 + f'/WRF_mov1_GFS_IC25_12UTC_v2/{case}/WRF_mp10_cu05_no_ocean_physics/wrfout_d01_2017-*{date}*'))
+
+home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2612/'
+wrfoutfile = sorted(glob.glob(home_2512 + f'/post/WRF_2dom/test/em_real/wrfout_d02_2017-*{date}*'))
 
 
 wrf_pcp = (

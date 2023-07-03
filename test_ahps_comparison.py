@@ -18,6 +18,14 @@ ahps_files = glob.glob(home + "nws_precip*_conus.nc")
 wrfoutfile = sorted(glob.glob(
     '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WRFV4/wrfout_d01_2017-*26*'))
 
+home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2612/'
+wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre/WRF_2dom/test/em_real/wrfout_d02_2017-*'))
+wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post/WRF_2dom/test/em_real/wrfout_d02_2017-*'))
+
+wrfoutfile_pre = wrfoutfile_pre[12:24+12]
+wrfoutfile_post = wrfoutfile_post[12:24+12]
+wrfoutfile = wrfoutfile_post
+
 wrf_pcp = (
     getvar(Dataset(wrfoutfile[-1]), "RAINC") +
     getvar(Dataset(wrfoutfile[-1]), "RAINNC")
@@ -33,7 +41,7 @@ wrf_pcp = sum([getvar(Dataset(wrffile_out), "RAINC") +
 slp = getvar(Dataset(wrfoutfile[0]), "slp")
 wrf_lat, wrf_lon = latlon_coords(slp)
 
-ahps_fileid = np.where(['20170826' in files for files in ahps_files])[0][0]
+ahps_fileid = np.where(['20170827' in files for files in ahps_files])[0][0]
 ahps_lon, ahps_lat, ahps_pcp = ahps.read_ahps(ahps_files[ahps_fileid])
 
 

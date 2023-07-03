@@ -16,7 +16,7 @@ from wrf import to_np, getvar, CoordPair, vertcross
 import glob
 
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 
 plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
 
@@ -25,19 +25,6 @@ home_2512 = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V
 start_point = CoordPair(lat=29.3, lon=-96.7)
 end_point = CoordPair(lat=30.2, lon=-93.9)
 
-
-pre_wrffiles = sorted(
-    glob.glob(
-        home_2512
-        + f"/WRF_mov1_GFS_IC25_12UTC_v2/pre/WRF_mp10_cu05_no_ocean_physics/wrfout_d01_*"
-    )
-)
-post_wrffiles = sorted(
-    glob.glob(
-        home_2512
-        + f"/WRF_mov1_GFS_IC25_12UTC_v2/post/WRF_mp10_cu05_no_ocean_physics/wrfout_d01_*"
-    )
-)
 
 
 home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2612/'
@@ -53,21 +40,21 @@ post_wrffiles = wrfoutfile_post[:index]
 
 
 def get_uv(prenc,  postnc):
- pre_u_cross = vertcross(wspd, getvar(prenc, "ua", units="m/s"), wrfin=prenc, start_point=start_point, end_point=end_point, latlon=True, meta=True,)
- pre_v_cross = vertcross(wspd, getvar(prenc, "va", units="m/s"), wrfin=prenc, start_point=start_point, end_point=end_point, latlon=True, meta=True,)
- post_u_cross = vertcross(wspd, getvar(postnc, "ua", units="m/s"), wrfin=postnc, start_point=start_point, end_point=end_point, latlon=True, meta=True,)
- post_v_cross = vertcross(wspd, getvar(postnc, "va", units="m/s"), wrfin=postnc, start_point=start_point, end_point=end_point, latlon=True, meta=True,)
+ pre_u_cross = vertcross(getvar(prenc, "ua", units="m/s"), pres, levels=np.arange(1000, 700, -5), wrfin=prenc, start_point=start_point, end_point=end_point, latlon=True, meta=True,)
+ pre_v_cross = vertcross(getvar(prenc, "va", units="m/s"), pres, levels=np.arange(1000, 700, -5), wrfin=prenc, start_point=start_point, end_point=end_point, latlon=True, meta=True,)
+ post_u_cross = vertcross(getvar(postnc, "ua", units="m/s"), pres, levels=np.arange(1000, 700, -5), wrfin=postnc, start_point=start_point, end_point=end_point, latlon=True, meta=True,)
+ post_v_cross = vertcross(getvar(postnc, "va", units="m/s"), pres, levels=np.arange(1000, 700, -5), wrfin=postnc, start_point=start_point, end_point=end_point, latlon=True, meta=True,)
  return pre_u_cross, pre_v_cross, post_u_cross, post_v_cross
 
 
 
 for prefiles, postfiles in progressbar.progressbar(zip(pre_wrffiles, post_wrffiles)):
     ncfile_pre = Dataset(prefiles)
-    z = getvar(ncfile_pre, "z")
+    pres = getvar(ncfile_pre, "pres")/100
     wspd = getvar(ncfile_pre, "wa", units="m/s")
     pre_wspd_cross = vertcross(
         wspd,
-        z,
+        pres, levels=np.arange(1000, 700, -5), 
         wrfin=ncfile_pre,
         start_point=start_point,
         end_point=end_point,
@@ -76,49 +63,59 @@ for prefiles, postfiles in progressbar.progressbar(zip(pre_wrffiles, post_wrffil
     )
 
     ncfile_post = Dataset(postfiles)
-    z = getvar(ncfile_post, "z")
+    pres = getvar(ncfile_post, "pres")/100
     wspd = getvar(ncfile_post, "wa", units="m/s")
     post_wspd_cross = vertcross(
         wspd,
-        z,
+        pres, levels=np.arange(1000, 700, -5), 
         wrfin=ncfile_post,
         start_point=start_point,
         end_point=end_point,
         latlon=True,
         meta=True,
     )
-    u1, v1, u2, v2 = get_uv(ncfile_pre, ncfile_post)
-    fig = plt.figure(figsize=(8, 6))
-    ax = plt.axes()
 
-    wspd_contours = ax.contourf(
-        to_np(post_wspd_cross) - to_np(pre_wspd_cross),
-        levels=np.arange(-5, 5.5, 0.5),
-        cmap=get_cmap("bwr"),
-    )
-    ax.quiver(u1.values, v1.values, color='b')
-    ax.quiver(u2.values, v2.values, color='r')
-    plt.colorbar(wspd_contours, ax=ax)
+    u1, v1, u2, v2 = get_uv(ncfile_pre, ncfile_post)
 
     coord_pairs = to_np(pre_wspd_cross.coords["xy_loc"])
     x_ticks = np.arange(coord_pairs.shape[0])
     x_labels = [pair.latlon_str(fmt="{:.2f}, {:.2f}") for pair in to_np(coord_pairs)]
-    ax.set_xticks(x_ticks[::5])
-    ax.set_xticklabels(x_labels[::5], rotation=45)
-
     vert_vals = to_np(pre_wspd_cross.coords["vertical"])
     v_ticks = np.arange(vert_vals.shape[0])
-    ax.set_yticks(v_ticks[::20])
-    ax.set_yticklabels(np.round(vert_vals[::20] / 1000, 1))
-    # ax.set_ylim((0, 12))
-    ax.set_xlabel("Latitude, Longitude")
-    ax.set_ylabel("Height (m)")
 
-    plt.title("Vertical Cross Section of vertical wind speed (m/s)")
+
+    fig, ax = plt.subplots(1, 2, figsize=(17, 6))
+
+    wspd_contours = ax[0].contourf(x_ticks, vert_vals,
+        to_np(np.sqrt(u1.values**2+v1.values**2)),
+        levels=np.arange(0, 45, 5),
+        cmap=get_cmap("jet"),
+    )
+    ax[0].quiver(x_ticks[::5], vert_vals[::8], np.ones(pre_wspd_cross.shape)[::8, ::5]*0, pre_wspd_cross[::8, ::5])
+
+    wspd_contours = ax[1].contourf(x_ticks, vert_vals,
+        to_np(np.sqrt(u2.values**2+v2.values**2)),
+        levels=np.arange(0, 45, 5),
+        cmap=get_cmap("jet"),)
+    ax[1].quiver(x_ticks[::5], vert_vals[::8], np.ones(post_wspd_cross.shape)[::8, ::5]*0, post_wspd_cross[::8, ::5])
+
+    for axs in ax:
+     plt.colorbar(wspd_contours, ax=axs)
+
+     axs.set_xticks(x_ticks[::5])
+     axs.set_xticklabels(x_labels[::5], rotation=45)
+     axs.invert_yaxis() 
+     axs.set_xlabel("Latitude, Longitude")
+     axs.set_ylabel("Pressure (hPa)")
+
+
+    ax[0].set_title("PRE: Vertical Cross Section of vertical wind speed (m/s)")
+    ax[1].set_title("POST: Vertical Cross Section of vertical wind speed (m/s)")
     plt.tight_layout()
-    plt.savefig(f"../figures/cross_section_w_uv/w_{str(wspd.Time.values)[:13]}.jpeg")
+    plt.savefig(f"../figures/cross_section_w_actual/w_{str(wspd.Time.values)[:13]}.jpeg")
     plt.close()
-    # plt.show()
+#    plt.show()
+
 #plt.show()
     # PLOT TRACK
 
@@ -141,5 +138,5 @@ ax.set_xlim([-102, -92.5])
 ax.set_ylim([25.5, 32.7])
 
 plt.tight_layout()
-plt.savefig('../figures/cross_section_w_uv/cross.jpeg')
-
+plt.savefig('../figures/cross_section_w_actual/cross.jpeg')
+#plt.show()

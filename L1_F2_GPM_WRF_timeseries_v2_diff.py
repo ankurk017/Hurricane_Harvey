@@ -25,11 +25,29 @@ home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V
 wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre/WRF_2dom/test/em_real/wrfout_d02_2017-*'))
 wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post/WRF_2dom/test/em_real/wrfout_d02_2017-*'))
 
+
+#wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/post_UCM/WRF//test/em_real/wrfout_d02_2017-*'))
+#wrfoutfile_post = sorted(glob.glob(home_2512 + f'post_urban/WRF//test/em_real/wrfout_d02_2017-*'))
+
+wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/post/WRF_2dom/test/em_real/wrfout_d02_2017-*'))
+wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post_UCM/WRF//test/em_real/wrfout_d02_2017-*'))
+
+index = np.min((len(wrfoutfile_pre), len(wrfoutfile_post)))
+
+wrfoutfile_pre = wrfoutfile_pre[:index]
+wrfoutfile_post = wrfoutfile_post[:index]
+
+#index = 12+25
+#wrfoutfile_pre = wrfoutfile_pre[12:index]
+#wrfoutfile_post = wrfoutfile_post[12:index]
+
 var_name = "slp"
 
 location = (-97.061, 27.8339)  # Landfall location
 location = (-95.499,  29.74)  # Houston location
 
+box = .45 # works fine
+box = .75
 box = 1.25
 
 var_timeseries_pre = []
@@ -99,10 +117,10 @@ end_lon, end_lat = location[0]+box, location[1]+box
 
 
 
-fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(18, 6), subplot_kw={'projection': ccrs.PlateCarree()})
+fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(18, 5), subplot_kw={'projection': ccrs.PlateCarree()})
 
 ax = axes[0]
-var_timeseries_pre.plot(ax = ax, cmap='gist_ncar', levels=np.arange(0, 800, 50))
+var_timeseries_pre.plot(ax = ax, cmap='gist_ncar', levels=np.arange(0, 1000, 50), cbar_kwargs={'shrink':0.8})
 ax.set_xlim([start_lon, end_lon])
 rect = Rectangle((start_lon, start_lat), end_lon - start_lon, end_lat - start_lat,
                  facecolor='none', edgecolor='red', linewidth=2)
@@ -121,10 +139,10 @@ gl.top_labels = False
 ax.set_xlim([start_lon, end_lon])
 ax.set_ylim([start_lat, end_lat])
 
-ax.set_title('PRE')
+#ax.set_title('PRE')
 
 ax = axes[1]
-var_timeseries_post.plot(ax=ax, cmap='gist_ncar', levels=np.arange(0, 800, 50))
+var_timeseries_post.plot(ax=ax, cmap='gist_ncar', levels=np.arange(0, 1000, 50) , cbar_kwargs={'shrink':0.8})
 ax.set_xlim([start_lon, end_lon])
 rect = Rectangle((start_lon, start_lat), end_lon - start_lon, end_lat - start_lat,
                  facecolor='none', edgecolor='red', linewidth=2)
@@ -143,10 +161,10 @@ gl.top_labels = False
 ax.set_xlim([start_lon, end_lon])
 ax.set_ylim([start_lat, end_lat])
 
-ax.set_title('POST')
+#ax.set_title('POST')
 
 ax = axes[2]
-(var_timeseries_post-var_timeseries_pre).plot(ax=ax, cmap='bwr', levels=np.arange(-400, 450, 50))
+(var_timeseries_post-var_timeseries_pre).plot(ax=ax, cmap='bwr', levels=np.arange(-150, 160, 10), cbar_kwargs={'shrink':0.8})
 ax.set_xlim([start_lon, end_lon])
 rect = Rectangle((start_lon, start_lat), end_lon - start_lon, end_lat - start_lat,
                  facecolor='none', edgecolor='red', linewidth=2)
@@ -168,6 +186,6 @@ ax.set_ylim([start_lat, end_lat])
 ax.set_title('POST - PRE')
 
 plt.tight_layout()
+#plt.savefig('../figures/Houston_all_accumulated_difference.jpeg')
 plt.show()
-
 

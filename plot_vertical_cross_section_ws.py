@@ -25,6 +25,8 @@ home_2512 = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V
 start_point = CoordPair(lat=29.3, lon=-96.7)
 end_point = CoordPair(lat=30.2, lon=-93.9)
 
+start_point = CoordPair(lat=29.36, lon=-96.29)
+end_point = CoordPair(lat=30.52, lon=-94.75)
 
 pre_wrffiles = sorted(
     glob.glob(
@@ -93,12 +95,15 @@ for prefiles, postfiles in progressbar.progressbar(zip(pre_wrffiles, post_wrffil
 
     wspd_contours = ax.contourf(
         to_np(post_wspd_cross) - to_np(pre_wspd_cross),
-        levels=np.arange(-5, 5.5, 0.5),
+        levels=np.arange(-12, 13, 1),
         cmap=get_cmap("bwr"),
     )
-    ax.quiver(u1.values, v1.values, color='b')
-    ax.quiver(u2.values, v2.values, color='r')
-    plt.colorbar(wspd_contours, ax=ax)
+    plt.colorbar(wspd_contours, ax=ax, extend='both')
+    
+    diff_ws = np.sqrt(u2.values**2, v2.values**2) - np.sqrt(u1.values**2, v1.values**2) 
+#    ax.quiver(u1.values, v1.values, color='b')
+#    ax.quiver(u2.values, v2.values, color='r')
+    ax.contour(diff_ws, cmap='seismic')
 
     coord_pairs = to_np(pre_wspd_cross.coords["xy_loc"])
     x_ticks = np.arange(coord_pairs.shape[0])
@@ -116,7 +121,7 @@ for prefiles, postfiles in progressbar.progressbar(zip(pre_wrffiles, post_wrffil
 
     plt.title("Vertical Cross Section of vertical wind speed (m/s)")
     plt.tight_layout()
-    plt.savefig(f"../figures/cross_section_w_uv/w_{str(wspd.Time.values)[:13]}.jpeg")
+    plt.savefig(f"../figures/cross_section_w_ws/w_{str(wspd.Time.values)[:13]}.jpeg")
     plt.close()
     # plt.show()
 #plt.show()
@@ -141,5 +146,5 @@ ax.set_xlim([-102, -92.5])
 ax.set_ylim([25.5, 32.7])
 
 plt.tight_layout()
-plt.savefig('../figures/cross_section_w_uv/cross.jpeg')
+plt.savefig('../figures/cross_section_w_ws/cross.jpeg')
 

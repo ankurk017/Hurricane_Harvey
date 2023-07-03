@@ -56,6 +56,9 @@ home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V
 wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre/WRF_2dom/test/em_real/wrfout_d02_2017-*'))
 wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post/WRF_2dom/test/em_real/wrfout_d02_2017-*'))
 
+wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/post_UCM/WRF//test/em_real/wrfout_d02_2017-*'))
+wrfoutfile_post = sorted(glob.glob(home_2512 + f'post_urban/WRF//test/em_real/wrfout_d02_2017-*'))
+
 
 
 var_name = "slp"
@@ -133,7 +136,8 @@ var_timeseries_post_merged = xr.concat(var_timeseries_post, dim="Time")
 ####### GPM ####
 gpm_files = sorted(
     glob.glob("/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/GPM/*nc4")
-)[432:650]
+#)[432:650]
+)[432:750]
 gpm_rainfall = xr.open_mfdataset(gpm_files)["precipitationCal"].interp(
     lon=location[0], lat=location[1]
 )
@@ -185,7 +189,7 @@ plt.xlim(
 )
 # plt.ylim((0, 510))
 plt.tight_layout()
-# plt.savefig('../figures/WRF_GPM_rainfall.jpeg')
+#plt.savefig('../figures/WRF_GPM_rainfall_accum.jpeg')
 
 
 fig, axs = plt.subplots(1, 1, figsize=(7.5, 4.3))
@@ -212,7 +216,7 @@ plt.xlim(
 )
 # plt.ylim((0, 510))
 plt.tight_layout()
-# plt.savefig('../figures/WRF_GPM_rainfall.jpeg')
+#plt.savefig('../figures/WRF_GPM_rainfall.jpeg')
 
 start_lon, start_lat = location[0]-box, location[1]-box
 end_lon, end_lat = location[0]+box, location[1]+box
@@ -235,11 +239,11 @@ for geometry in geometries:
 gl = ax.gridlines(draw_labels=True)
 gl.right_labels = False
 gl.top_labels = False
-ax.set_xlim([-102, -92.5])
-ax.set_ylim([25.5, 32.7])
+ax.set_xlim([-99, -92.5])
+ax.set_ylim([27, 32.7])
 
 plt.tight_layout()
-#plt.savefig('../figures/cross_section_w/cross.jpeg')
+#plt.savefig('../figures/region_gpm_mean_cross.jpeg')
 plt.show()
 
 
