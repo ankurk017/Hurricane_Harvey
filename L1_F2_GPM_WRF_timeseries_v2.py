@@ -56,8 +56,8 @@ home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V
 wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre/WRF_2dom/test/em_real/wrfout_d02_2017-*'))
 wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post/WRF_2dom/test/em_real/wrfout_d02_2017-*'))
 
-wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/post_UCM/WRF//test/em_real/wrfout_d02_2017-*'))
-wrfoutfile_post = sorted(glob.glob(home_2512 + f'post_urban/WRF//test/em_real/wrfout_d02_2017-*'))
+wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre_UCM/WRF//test/em_real/wrfout_d02_2017-*'))
+wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post_UCM/WRF//test/em_real/wrfout_d02_2017-*'))
 
 
 
@@ -66,7 +66,7 @@ var_name = "slp"
 location = (-97.061, 27.8339)  # Landfall location
 location = (-95.499,  29.74)  # Houston location
 
-box = 0.7
+box = 0.6
 
 var_timeseries_pre = []
 var_timeseries_post = []
@@ -189,7 +189,7 @@ plt.xlim(
 )
 # plt.ylim((0, 510))
 plt.tight_layout()
-#plt.savefig('../figures/WRF_GPM_rainfall_accum.jpeg')
+plt.savefig('../figures/rainfall/WRF_GPM_rainfall_accum.jpeg')
 
 
 fig, axs = plt.subplots(1, 1, figsize=(7.5, 4.3))
@@ -216,7 +216,7 @@ plt.xlim(
 )
 # plt.ylim((0, 510))
 plt.tight_layout()
-#plt.savefig('../figures/WRF_GPM_rainfall.jpeg')
+plt.savefig('../figures/rainfall/WRF_GPM_rainfall.jpeg')
 
 start_lon, start_lat = location[0]-box, location[1]-box
 end_lon, end_lat = location[0]+box, location[1]+box
@@ -243,7 +243,7 @@ ax.set_xlim([-99, -92.5])
 ax.set_ylim([27, 32.7])
 
 plt.tight_layout()
-#plt.savefig('../figures/region_gpm_mean_cross.jpeg')
+plt.savefig('../figures/rainfall/region_gpm_mean_cross.jpeg')
 plt.show()
 
 

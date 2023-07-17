@@ -22,15 +22,11 @@ plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
 
 
 home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2612/'
-wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre/WRF_2dom/test/em_real/wrfout_d02_2017-*'))
-wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post/WRF_2dom/test/em_real/wrfout_d02_2017-*'))
 
+case = 'plu3'
 
-#wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/post_UCM/WRF//test/em_real/wrfout_d02_2017-*'))
-#wrfoutfile_post = sorted(glob.glob(home_2512 + f'post_urban/WRF//test/em_real/wrfout_d02_2017-*'))
-
-wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre_UCM/WRF/test/em_real/wrfout_d02_2017-*'))
-wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post_UCM/WRF//test/em_real/wrfout_d02_2017-*'))
+wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre_UCM/WRF_{case}/test/em_real/wrfout_d02_2017-*'))
+wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post_UCM/WRF_{case}//test/em_real/wrfout_d02_2017-*'))
 
 index = np.min((len(wrfoutfile_pre), len(wrfoutfile_post)))
 
@@ -38,8 +34,8 @@ index = np.min((len(wrfoutfile_pre), len(wrfoutfile_post)))
 #wrfoutfile_post = wrfoutfile_post[:index]
 
 #index = 12+25
-wrfoutfile_pre = wrfoutfile_pre[18:30]
-wrfoutfile_post = wrfoutfile_post[18:30]
+wrfoutfile_pre = wrfoutfile_pre[12:30]
+wrfoutfile_post = wrfoutfile_post[12:30]
 
 var_name = "slp"
 
@@ -186,6 +182,6 @@ ax.set_ylim([start_lat, end_lat])
 ax.set_title('POST - PRE')
 
 plt.tight_layout()
-plt.savefig('../figures/rainfall/rainfall_Houston_all_accumulated_difference.jpeg')
-plt.show()
+plt.savefig(f'../figures/rainfall/{case}_rainfall_Houston_all_accumulated_difference.jpeg')
+#plt.show()
 

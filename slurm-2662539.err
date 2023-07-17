@@ -1,0 +1,1 @@
+/var/spool/slurmd/job2662539/slurm_script: line 19:  3733 Segmentation fault      (core dumped) python plot_vertical_cross_section_actual_vert_wind_contourf.py

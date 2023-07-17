@@ -118,9 +118,9 @@ for prefiles, postfiles in progressbar.progressbar(zip(pre_wrffiles, post_wrffil
     ax[0].set_title("PRE: Vertical Cross Section of vertical wind speed (m/s)")
     ax[1].set_title("POST: Vertical Cross Section of vertical wind speed (m/s)")
     plt.tight_layout()
-    plt.savefig(f"../figures/cross_section_w_uv_actual_UCM/w_{str(wspd.Time.values)[:13]}.jpeg")
-    plt.close()
-#    plt.show()
+    plt.savefig(f"../figures/hovmoller_UCM/w_{str(wspd.Time.values)[:13]}.jpeg")
+#    plt.close()
+    plt.show()
 
 #plt.show()
     # PLOT TRACK
@@ -144,5 +144,5 @@ ax.set_xlim([-102, -92.5])
 ax.set_ylim([25.5, 32.7])
 
 plt.tight_layout()
-plt.savefig('../figures/cross_section_w_uv_actual_UCM/cross.jpeg')
+plt.savefig('../figures/hovmoller_UCM/cross.jpeg')
 #plt.show()

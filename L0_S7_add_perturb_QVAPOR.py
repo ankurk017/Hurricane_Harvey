@@ -1,9 +1,13 @@
 import numpy as np
 import xarray as xr
 
-wrf_input = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2612/post_ensemble/WRF/test/em_real/wrfinput_d02'
+def_folder = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2612/'
 
-postfix = ('min1', 'min2', 'min3', 'plu1', 'plu2', 'plu3')
+case = 'pre'
+wrf_input = def_folder+f'{case}_UCM/WRF/test/em_real/wrfinput_d02'
+
+
+postfix = [case+'_'+values for values in ('min1', 'min2', 'min3', 'plu1', 'plu2', 'plu3')]
 factor = (0.99, 0.98, 0.97, 1.01, 1.02, 1.03)
 
 
