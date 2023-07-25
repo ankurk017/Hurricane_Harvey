@@ -1,0 +1,1 @@
+/var/spool/slurmd/job2677308/slurm_script: line 20: 32255 Segmentation fault      (core dumped) python plot_ws_houston_1timestep_windspeed.py

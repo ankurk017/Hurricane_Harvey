@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --mail-user=akumar@nsstc.uah.edu  
 #SBATCH -J wrf_plots
-#SBATCH -p shared
+#SBATCH -p standard
 #SBATCH --ntasks 8
 #SBATCH -t 20-00:00
 #SBATCH --mem-per-cpu=2G
@@ -16,6 +16,7 @@ export PATH="/rhome/akumar/anaconda3/envs/pywrf/bin:$PATH"
 #python plot_vertical_cross_section_actual_vert_wind.py
 #python plot_vertical_cross_section_quiver.py
 #python plot_vertical_cross_section_ws.py
-python plot_vertical_cross_section_actual_vert_wind_contourf.py
+#python plot_vertical_cross_section_actual_vert_wind_contourf.py
+python plot_ws_houston_1timestep_windspeed.py
 echo '**********Finished!**********'
 

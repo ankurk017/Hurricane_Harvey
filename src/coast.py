@@ -48,8 +48,8 @@ def plot_coast(axes: cartopy.mpl.geoaxes.GeoAxes) -> None:
         name="admin_1_states_provinces_lines",
         facecolor="none",
     )
-    axes.add_feature(countries, edgecolor="darkgoldenrod", linewidth=1.5)
-    axes.add_feature(states, edgecolor="darkgoldenrod", linewidth=1.5)
+    axes.add_feature(countries, edgecolor="blue", linewidth=0.5)
+    axes.add_feature(states, edgecolor="blue", linewidth=0.5)
     gl = axes.gridlines(
         crs=ccrs.PlateCarree(),
         draw_labels=True,
