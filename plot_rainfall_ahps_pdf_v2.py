@@ -14,7 +14,7 @@ from scipy.interpolate import griddata
 plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
 
 date = '28'
-case = 'pre'
+case = 'post'
 
 home = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/AHPS/"
 
@@ -33,10 +33,7 @@ wrfoutfile = sorted(glob.glob(
 wrfoutfile = sorted(glob.glob(home_2512 + f'/WRF_mov1_GFS_IC25_12UTC_v2/{case}/WRF_mp10_cu05_no_ocean_physics/wrfout_d01_2017-*{date}*'))
 
 home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/'
-wrfoutfile1 = sorted(glob.glob(home_2512 + f'/{case}/WRF_cntl/test/em_real/wrfout_d03_2017-*{int(date)-1}*'))
-wrfoutfile2 = sorted(glob.glob(home_2512 + f'/{case}/WRF_cntl/test/em_real/wrfout_d03_2017-*{date}*'))
-
-wrfoutfile = sorted(wrfoutfile1+wrfoutfile2)[12:12+24]
+wrfoutfile = sorted(glob.glob(home_2512 + f'/{case}/WRF_cntl/test/em_real/wrfout_d02_2017-*{date}*'))
 
 
 wrf_pcp = (
@@ -54,14 +51,15 @@ ahps_lon, ahps_lat, ahps_pcp = ahps.read_ahps(ahps_files[ahps_fileid])
 
 
 domain_bb = [-100, -93, 25.5, 31.5]
-domain_bb = [-96.8, -94.35, 28.95, 30.85]
-levels = np.array((0.1, 10, 20, 30, 40, 50, 100, 150, 200, 250, 300, 400, 500, 600, 700))
+levels = np.array((0.1, 10, 20, 30, 40, 50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 800, 900))
 
 fig, ax = plt.subplots(
-    1, 2, figsize=(19, 5), sharey=True, subplot_kw={"projection": ccrs.PlateCarree()},
+    1, 2, figsize=(14, 5), sharey=True, subplot_kw={"projection": ccrs.PlateCarree()},
 )
 cont = ax[0].contourf(ahps_lon, ahps_lat, ahps_pcp,
-                      levels=levels, cmap='jet') #locator=ticker.LogLocator(), cmap='jet')
+                      levels=levels, 
+                      locator=ticker.LogLocator(), 
+                      cmap='gist_ncar')
 
 shapefile_path = "/rhome/akumar/Downloads/Houston/COH_ADMINISTRATIVE_BOUNDARY_-_MIL.shp"
 reader = shpreader.Reader(shapefile_path)
@@ -77,8 +75,10 @@ ax[0].set_xlim((domain_bb[0], domain_bb[1]))
 ax[0].set_ylim((domain_bb[2], domain_bb[3]))
 ax[0].set_title('AHPS')
 
-cont = ax[1].contourf(wrf_lon, wrf_lat, wrf_pcp, cmap="jet",
-                      levels=levels) #, locator=ticker.LogLocator())
+cont = ax[1].contourf(wrf_lon, wrf_lat, wrf_pcp, cmap="gist_ncar",
+                      levels=levels, 
+                      locator=ticker.LogLocator()
+                      )
 
 shapefile_path = "/rhome/akumar/Downloads/Houston/COH_ADMINISTRATIVE_BOUNDARY_-_MIL.shp"
 reader = shpreader.Reader(shapefile_path)
@@ -131,7 +131,7 @@ cor = correlation_without_nans(ahps_pcp_domain.ravel(), wrf_pcp_domain.ravel())
 title = f"{ahps_files[ahps_fileid].split('/')[-1].split('_')[-2]} | {case} | RMSE: {np.round(rms, 2)}, R: {np.round(cor, 2)}"
 
 plt.title(title)
-plt.savefig(f"../figures/ahps_aug29/2km_AHPS_{case}_pcp_{ahps_files[ahps_fileid].split('/')[-1].split('_')[-2]}.jpeg")
+plt.savefig(f"../figures/ahps/2km_AHPS_{case}_pcp_{ahps_files[ahps_fileid].split('/')[-1].split('_')[-2]}.jpeg")
 #plt.show()
 
 ########## plotting differenbce
@@ -161,7 +161,7 @@ cbar.ax.set_yticklabels(levels)
 cbar.ax.set_ylabel('Precipitation Error (mm)')
 title = f"{ahps_files[ahps_fileid].split('/')[-1].split('_')[-2]} | {case} | RMSE: {np.round(rms, 2)}, R: {np.round(cor, 2)}"
 plt.title(title)
-plt.savefig(f"../figures/ahps_aug29/Diff_2km_AHPS_{case}_pcp_{ahps_files[ahps_fileid].split('/')[-1].split('_')[-2]}.jpeg")
+plt.savefig(f"../figures/ahps/Diff_2km_AHPS_{case}_pcp_{ahps_files[ahps_fileid].split('/')[-1].split('_')[-2]}.jpeg")
 #plt.show()
 
 

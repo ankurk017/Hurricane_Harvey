@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 from wrf import getvar
 from netCDF4 import Dataset
-from self_utils import ahps, coast
-
+#from self_utils import ahps, coast
+import src.coast as coast
 
 def wrf_assign_coords(var):
     lon_1d = var.XLONG.mean(dim="south_north").values
@@ -61,6 +61,72 @@ def crop_region(pre_wspd, location, box=0.2):
 
 
 def plot_bb(wrf_file, location):
+    def plot_location(ax, loc):
+        print(loc)
+        south = loc["south_north"] - loc["box"] / 2
+        north = loc["south_north"] + loc["box"] / 2
+        west = loc["west_east"] - loc["box"] / 2
+        east = loc["west_east"] + loc["box"] / 2
+
+        rectangle = Rectangle(
+            (west, south),
+            loc["box"],
+            loc["box"],
+            facecolor="red",
+            alpha=0.5,
+        )
+
+        ax.add_patch(rectangle)
+
+    fig = plt.figure(figsize=(8, 6))
+    ax = plt.axes(projection=ccrs.PlateCarree())
+    wrf_assign_coords(getvar(Dataset(wrf_file), "wspd_wdir10")).sel(
+        wspd_wdir="wspd"
+    ).plot(cmap="binary", levels=np.arange(0, 30, 2))
+
+    if isinstance(location, tuple):
+        for loc in location:
+            plot_location(ax, loc)
+    else:
+        plot_location(ax, location)
+
+    coast.plot_coast(ax)
+    shapefile_path = (
+        "/rhome/akumar/Downloads/Houston/COH_ADMINISTRATIVE_BOUNDARY_-_MIL.shp"
+    )
+    reader = shpreader.Reader(shapefile_path)
+    geometries = reader.geometries()
+    for geometry in geometries:
+        ax.add_geometries(
+            [geometry], ccrs.PlateCarree(), facecolor="none", edgecolor="blue"
+        )
+
+    gl = ax.gridlines(draw_labels=True)
+    gl.right_labels = False
+    gl.top_labels = False
+    ax.set_xlim([-96.66, -93.73])
+    ax.set_ylim([28.21, 30.93])
+
+    plt.tight_layout()
+
+    return fig
+
+def find_common_min_max(data_matrices):
+    if not data_matrices:
+        return None, None
+
+    # Initialize with the first matrix
+    min_value, max_value = np.min(data_matrices[0]), np.max(data_matrices[0])
+
+    # Iterate through the remaining matrices
+    for matrix in data_matrices[1:]:
+        min_matrix, max_matrix = np.min(matrix), np.max(matrix)
+        min_value = min(min_value, min_matrix)
+        max_value = max(max_value, max_matrix)
+
+    return min_value, max_value
+
+def plot_bb_old(wrf_file, location):
     fig = plt.figure(figsize=(8, 6))
     ax = plt.axes(projection=ccrs.PlateCarree())
     wrf_assign_coords(getvar(Dataset(wrf_file), "wspd_wdir10")).sel(
@@ -105,12 +171,12 @@ def plot_bb(wrf_file, location):
 
 
 def plot_crossline(wrf_file, start_point, end_point):
-    fig = plt.figure(figsize=(8, 6))
+    fig = plt.figure(figsize=(10, 8))
     ax = plt.axes(projection=ccrs.PlateCarree())
-    wrf_assign_coords(getvar(Dataset(wrf_file), "wspd_wdir10")).sel(wspd_wdir="wspd").plot(
-        cmap="binary", levels=np.arange(0, 30, 2)
+    wrf_assign_coords((getvar(Dataset(wrf_file), "RAINNC") + getvar(Dataset(wrf_file), "RAINC"))).plot(
+        cmap="gist_ncar",  levels = np.arange(0, 1000, 100), cbar_kwargs={'shrink':0.8}
     )
-    ax.plot((end_point.lon, start_point.lon), (end_point.lat, start_point.lat), "r-")
+    ax.plot((end_point.lon, start_point.lon), (end_point.lat, start_point.lat), "r-",)
     coast.plot_coast(ax)
     shapefile_path = (
         "/rhome/akumar/Downloads/Houston/COH_ADMINISTRATIVE_BOUNDARY_-_MIL.shp"
@@ -126,7 +192,7 @@ def plot_crossline(wrf_file, start_point, end_point):
     gl.right_labels = False
     gl.top_labels = False
     ax.set_xlim([-97.5, -94.2])
-    ax.set_ylim([29, 31])
+    ax.set_ylim([28, 31])
 
     plt.tight_layout()
     return fig

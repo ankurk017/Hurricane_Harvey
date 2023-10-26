@@ -186,6 +186,6 @@ ax.set_ylim([start_lat, end_lat])
 ax.set_title('POST - PRE')
 
 plt.tight_layout()
-plt.savefig('../figures/rainfall/rainfall_Houston_all_accumulated_difference.jpeg')
+#plt.savefig('../figures/rainfall/rainfall_Houston_all_accumulated_difference.jpeg')
 plt.show()
 

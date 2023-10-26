@@ -7,57 +7,18 @@ import glob
 import cartopy.crs as ccrs
 from netCDF4 import Dataset
 from wrf import getvar, latlon_coords
-from self_utils import ahps, coast
+#from self_utils import ahps, coast
+import src.coast as coast
 import numpy as np
 import cartopy.io.shapereader as shpreader
 import shapely.geometry as sgeom
 from shapely.ops import unary_union
 from shapely.prepared import prep
-from self_utils import coast
-
 import datetime
 from matplotlib.patches import Rectangle
 
-plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
+plt.rcParams.update({"font.size": 16, "font.weight": "bold"})
 
-
-#wrf_runs = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/post/WRF_9-3-51/WRFV4/"
-#wrfoutfile_post = sorted(glob.glob(wrf_runs + "wrfout_d01*"))
-
-#wrf_runs = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WRFV4/"
-#wrfoutfile_pre = sorted(glob.glob(wrf_runs + "wrfout_d01*"))
-
-home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/'
-#wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/WRF_mov1_GFS_IC25_12UTC_v2/pre/WRF_mp10_cu05_no_ocean_physics/wrfout_d01_2017-*'))
-#wrfoutfile_post = sorted(glob.glob(home_2512 + f'/WRF_mov1_GFS_IC25_12UTC_v2/post/WRF_mp10_cu05_no_ocean_physics/wrfout_d01_2017-*'))
-
-
-wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/WRF_FNL_2612/WRF/test/em_real/wrfout_d01_2017-*')) # gives good results
-wrfoutfile_post = sorted(glob.glob(home_2512 + f'/WRF_FNL_2612/WRF/test/em_real/wrfout_d02_2017-*')) # gives good results
-
-
-
-home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V3/WRF_Simulations/'
-wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/WRF_HRRR_sim01_pre/WRF/test/em_real/wrfout_d01_2017-*'))
-wrfoutfile_post = sorted(glob.glob(home_2512 + f'/WRF_HRRR_sim01_post/WRF/test/em_real/wrfout_d01_2017-*'))
-
-#wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/WRFV45_FNL_2518/WRF_old/test/em_real//wrfout_d01_2017-*'))
-#wrfoutfile_post = wrfoutfile_pre
-
-#home_nomoving = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/'
-#wrfoutfile_pre = sorted(glob.glob(home_nomoving + f'WRF_mov1_GFS_IC25_12UTC/WRFV4_mp10_cu06/wrfout_d01*'))
-#wrfoutfile_post = sorted(glob.glob(home_nomoving + f'WRF_mov1_GFS_IC25_12UTC/WRFV4_mp10_cu06/wrfout_d01*'))
-
-home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2612/'
-wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre/WRF_1dom/test/em_real/wrfout_d01_2017-*'))
-wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post/WRF_1dom/test/em_real/wrfout_d01_2017-*'))
-
-home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2612/'
-wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre/WRF_2dom/test/em_real/wrfout_d02_2017-*'))
-wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post/WRF_2dom/test/em_real/wrfout_d02_2017-*'))
-
-wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre_UCM/WRF//test/em_real/wrfout_d02_2017-*'))
-wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post_UCM/WRF//test/em_real/wrfout_d02_2017-*'))
 
 home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/'
 
@@ -65,17 +26,12 @@ wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre/WRF_cntl//test/em_real/wrfo
 wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post/WRF_cntl//test/em_real/wrfout_d03_2017-*'))
 
 
-
-
 var_name = "slp"
 
 location = (-97.061, 27.8339)  # Landfall location
 location = (-95.499,  29.74)  # Houston location
 
-#location = (-95.35, 29.75)
-#location = (-95.82, 29.73)
-
-box = 0.5
+box = 1.5
 
 var_timeseries_pre = []
 var_timeseries_post = []
@@ -201,7 +157,7 @@ plt.tight_layout()
 #plt.savefig('../figures/rainfall/WRF_GPM_rainfall_accum.jpeg')
 
 
-fig, axs = plt.subplots(1, 1, figsize=(7.5, 4.3))
+fig, axs = plt.subplots(1, 1, figsize=(10, 5.5))
 axs.plot(gpm_timestep, gpm_rainfall_region.values, "k-", label="GPM")
 axs.plot(
     var_timeseries_pre_merged["Time"],
@@ -223,9 +179,16 @@ plt.xticks(rotation=25)
 plt.xlim(
     (var_timeseries_post_merged["Time"][0], var_timeseries_post_merged["Time"][-1])
 )
+
+plt.grid()
+plt.minorticks_on()
+axs.xaxis.set_minor_locator(MaxNLocator(46))
+
 # plt.ylim((0, 510))
 plt.tight_layout()
-#plt.savefig('../figures/rainfall/WRF_GPM_rainfall.jpeg')
+plt.savefig('../figures_paper/WRF_GPM_rainfall.jpeg')
+plt.show()
+
 
 start_lon, start_lat = location[0]-box, location[1]-box
 end_lon, end_lat = location[0]+box, location[1]+box

@@ -23,7 +23,7 @@ import matplotlib
 
 plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
 
-case = '_cntl'
+case = '_plu1'
 
 home_2512 = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2612/"
 
@@ -39,8 +39,16 @@ index = np.min((len(wrfoutfile_pre), len(wrfoutfile_post)))
 pre_wrffiles = wrfoutfile_pre[:index]
 post_wrffiles = wrfoutfile_post[:index]
 
+lons=[-95.35, -95.82, ]
+lats=[ 29.75,  29.73,]
 
-urban_change = {"south_north": 29.79, "west_east": -95.72, "box":0.1}
+location1 = {"south_north": lats[0], "west_east": lons[0], "box": 0.2}
+location2 = {"south_north": lats[1], "west_east": lons[1], "box": 0.2}
+
+
+urban_change = {"south_north": 29.79, "west_east": -95.72, "box":0.1} # best
+urban_change = location2
+
 
 pre_w_profile = []
 post_w_profile = []
@@ -72,7 +80,7 @@ axs.set_ylabel('Pressure Levels (hPa)')
 
 plt.title(f'{case.upper()[1:]}')
 plt.tight_layout()
-plt.savefig(f'../figures/w_wind/w_wind_diff1{case}.jpeg')
+plt.savefig(f'../figures/w_wind/location2_w_wind_diff1{case}.jpeg')
 
 #plt.show()
 

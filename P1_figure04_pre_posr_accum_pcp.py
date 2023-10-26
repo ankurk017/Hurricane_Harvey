@@ -7,35 +7,32 @@ import glob
 import cartopy.crs as ccrs
 from netCDF4 import Dataset
 from wrf import getvar, latlon_coords
-from self_utils import ahps, coast
+import src.coast as coast
 import numpy as np
 import cartopy.io.shapereader as shpreader
 import shapely.geometry as sgeom
 from shapely.ops import unary_union
 from shapely.prepared import prep
-from self_utils import coast
 
 import datetime
 from matplotlib.patches import Rectangle
 
-plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
+plt.rcParams.update({"font.size": 16, "font.weight": "bold"})
 
 
 home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/'
 
-case = 'cntl'
-
-wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre/WRF_{case}/test/em_real/wrfout_d02_2017-*'))
-wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post/WRF_{case}//test/em_real/wrfout_d02_2017-*'))
+wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre/WRF/test/em_real/wrfout_d02_2017-*'))
+wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post/WRF//test/em_real/wrfout_d02_2017-*'))
 
 index = np.min((len(wrfoutfile_pre), len(wrfoutfile_post)))
-
+index = 85
 #wrfoutfile_pre = wrfoutfile_pre[:index]
 #wrfoutfile_post = wrfoutfile_post[:index]
 
 #index = 12+25
-wrfoutfile_pre = wrfoutfile_pre[:36+18]
-wrfoutfile_post = wrfoutfile_post[:36+18]
+wrfoutfile_pre = wrfoutfile_pre[36:36+48]
+wrfoutfile_post = wrfoutfile_post[36:36+48]
 
 var_name = "slp"
 
@@ -116,7 +113,7 @@ end_lon, end_lat = location[0]+box, location[1]+box
 fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(18, 5), subplot_kw={'projection': ccrs.PlateCarree()})
 
 ax = axes[0]
-var_timeseries_pre.plot(ax = ax, cmap='gist_ncar', levels=np.arange(0, 1000, 50), cbar_kwargs={'shrink':0.8})
+var_timeseries_pre.plot(ax = ax, cmap='gist_ncar', levels=np.arange(0, 1100, 100), extend='both', cbar_kwargs={'shrink':0.8})
 ax.set_xlim([start_lon, end_lon])
 rect = Rectangle((start_lon, start_lat), end_lon - start_lon, end_lat - start_lat,
                  facecolor='none', edgecolor='red', linewidth=2)
@@ -134,11 +131,10 @@ gl.right_labels = False
 gl.top_labels = False
 ax.set_xlim([start_lon, end_lon])
 ax.set_ylim([start_lat, end_lat])
-
-#ax.set_title('PRE')
+ax.set_title(f'LULC 2001 ')
 
 ax = axes[1]
-var_timeseries_post.plot(ax=ax, cmap='gist_ncar', levels=np.arange(0, 1000, 50) , cbar_kwargs={'shrink':0.8})
+var_timeseries_post.plot(ax=ax, cmap='gist_ncar', levels=np.arange(0, 1100, 100) , extend='both', cbar_kwargs={'shrink':0.8})
 ax.set_xlim([start_lon, end_lon])
 rect = Rectangle((start_lon, start_lat), end_lon - start_lon, end_lat - start_lat,
                  facecolor='none', edgecolor='red', linewidth=2)
@@ -156,11 +152,10 @@ gl.right_labels = False
 gl.top_labels = False
 ax.set_xlim([start_lon, end_lon])
 ax.set_ylim([start_lat, end_lat])
-
-#ax.set_title('POST')
+ax.set_title('LULC 2017')
 
 ax = axes[2]
-(var_timeseries_post-var_timeseries_pre).plot(ax=ax, cmap='bwr', levels=np.arange(-150, 160, 10), cbar_kwargs={'shrink':0.8})
+(var_timeseries_post-var_timeseries_pre).plot(ax=ax, cmap='bwr', levels=np.arange(-120, 140, 20), extend='both', cbar_kwargs={'shrink':0.8})
 ax.set_xlim([start_lon, end_lon])
 rect = Rectangle((start_lon, start_lat), end_lon - start_lon, end_lat - start_lat,
                  facecolor='none', edgecolor='red', linewidth=2)
@@ -179,9 +174,43 @@ gl.top_labels = False
 ax.set_xlim([start_lon, end_lon])
 ax.set_ylim([start_lat, end_lat])
 
-ax.set_title('POST - PRE')
+ax.set_title('LULC 2017 - LULC 2001')
 
 plt.tight_layout()
-plt.savefig(f'../figures/rainfall/2512_{case}_rainfall_Houston_all_accumulated_difference.jpeg')
+plt.savefig('../figures_paper/rainfall_Houston_all_accumulated_difference.jpeg')
+#plt.show()
+
+
+
+plt.rcParams.update({"font.size": 10, "font.weight": "bold"})
+data_post = var_timeseries_post.values.ravel()
+data_pre = var_timeseries_pre.values.ravel()
+
+fig, ax = plt.subplots(3, 1, figsize=(5, 3.6))
+ax[0].boxplot(data_post, vert=False, positions=[1], widths=0.6, showfliers=False, labels=['LULC 2017'])
+ax[0].scatter(data_post.mean(),[1],  marker='D', color='red', s=60, label='Mean LULC 2017')
+ax[0].set_xlabel('WRF accumulated precipitation (mm/hr)')
+
+
+ax[1].boxplot(data_pre, vert=False, positions=[1], widths=0.6, showfliers=False, labels=['LULC 2001'])
+ax[1].scatter(data_pre.mean(),[1],  marker='D', color='red', s=60, label='Mean LULC 2001')
+ax[1].set_xlabel('WRF accumulated precipitation (mm/hr)')
+plt.tight_layout()
+
+data_diff = data_post - data_pre
+ax[2].boxplot(data_diff, vert=False, positions=[1], widths=0.6, showfliers=False, labels=['2017 - 2001'])
+ax[2].scatter(data_diff.mean(),[1],  marker='D', color='red', s=60, label='Mean LULC 2001')
+ax[2].set_xlabel('WRF accumulated precipitation error (mm/hr)')
+plt.tight_layout()
+
+
+plt.savefig('../figures_paper/rainfall_Houston_pre_post_boxplot.jpeg', dpi=300)
 plt.show()
+plt.close()
+
+
+
+
+
+
 

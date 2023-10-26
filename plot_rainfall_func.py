@@ -28,7 +28,9 @@ def plot_rainfall_and_winds(
     plot_cross=False,
     case="_cntl",
 ):
-    domain_bb = [-96.72, -94.21, 28.71, 30.91]
+
+
+
     urban_change = {"south_north": 29.74, "west_east": -95.49, "box": 0.8}
     domain_bb = [
         urban_change["west_east"] - urban_change["box"],

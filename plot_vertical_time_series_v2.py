@@ -27,14 +27,14 @@ import matplotlib
 plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
 
 
-home_2512 = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2612/"
+home_2512 = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/"
 
 wrfoutfile_pre = sorted(
-    glob.glob(home_2512 + f"/pre_UCM/WRF/test/em_real/wrfout_d02_2017-*")
-)[:36]
+    glob.glob(home_2512 + f"/pre/WRF_cntl/test/em_real/wrfout_d02_2017-*")
+)[:60]
 wrfoutfile_post = sorted(
-    glob.glob(home_2512 + f"/post_UCM/WRF/test/em_real/wrfout_d02_2017-*")
-)[:36]
+    glob.glob(home_2512 + f"/post/WRF_cntl/test/em_real/wrfout_d02_2017-*")
+)[:60]
 
 index = np.min((len(wrfoutfile_pre), len(wrfoutfile_post)))
 
@@ -64,25 +64,25 @@ for prefiles, postfiles in progressbar.progressbar(zip(pre_wrffiles, post_wrffil
         interplevel(w_post, pres, np.arange(1000, 700, -5)), urban_change
     ))
 
-fig, axs = plt.subplots(2, 1, figsize=(10, 12))
+fig, axs = plt.subplots(2, 1, figsize=(8, 9), sharex=True)
 xr.concat(pre_w_profile, dim='Time').T.plot(ax=axs[0], levels=np.arange(-1.2, 1.4, 0.1))
 xr.concat(post_w_profile, dim='Time').T.plot(ax=axs[1], levels=np.arange(-1.2, 1.4, 0.1))
 axs[0].set_title('LULC 2001')
 axs[1].set_title('LULC 2017')
 [ax.invert_yaxis() for ax in axs]
 plt.tight_layout()
-plt.savefig('../figures/w_wind/w_wind.jpeg')
+plt.savefig('../figures/w_wind/2512_w_wind.jpeg')
 fig, axs = plt.subplots(1, 1, figsize=(12, 6))
 (xr.concat(post_w_profile, dim='Time')-xr.concat(pre_w_profile, dim='Time')).T.plot(ax=axs, levels=np.arange(-0.6, 0.8, 0.1))
 axs.invert_yaxis()
 plt.tight_layout()
-plt.savefig('../figures/w_wind/w_wind_diff1.jpeg')
+plt.savefig('../figures/w_wind/2512_w_wind_diff1.jpeg')
 
 fig, axs = plt.subplots(1, 1, figsize=(12, 6))
 (xr.concat(post_w_profile, dim='Time')-xr.concat(pre_w_profile, dim='Time')).T.plot.contourf(ax=axs, levels=np.arange(-0.6, 0.8, 0.1))
 axs.invert_yaxis()
 plt.tight_layout()
-plt.savefig('../figures/w_wind/w_wind_diff2.jpeg')
+plt.savefig('../figures/w_wind/2512_w_wind_diff2.jpeg')
 
 #plt.show()
 
@@ -119,7 +119,7 @@ ax.set_xlim([-96.66, -93.73])
 ax.set_ylim([28.21, 30.93])
 
 plt.tight_layout()
-plt.savefig('../figures/w_wind/region_gpm_mean_cross.jpeg')
+plt.savefig('../figures/w_wind/2512_region_gpm_mean_cross.jpeg')
 #plt.show()
 
 

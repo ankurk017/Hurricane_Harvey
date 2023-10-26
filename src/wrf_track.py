@@ -1,4 +1,5 @@
-from self_utils import coast
+#from self_utils import coast
+import src.coast  as coast
 from netCDF4 import Dataset
 import matplotlib.dates as mdates
 import numpy as np
@@ -43,39 +44,43 @@ def get_track_details(wrf_files):
 
 def plot_track_intensity(harvey, track_details_array, labels, colors):
 
-    fig, axs = plt.subplots(2, 1, figsize=(8, 7))
+    fig, axs = plt.subplots(2, 1, figsize=(9, 8), sharex=True)
 
-    axs[0].plot(harvey["date"], harvey["vmax"], "k-", label="OBS")
+    axs[0].plot(harvey["time"], harvey["vmax"], "k-", label="OBS", marker='o')
 
     for track_details, labs, cols in zip(track_details_array, labels, colors):
         axs[0].plot(
-            track_details["ws"]["Time"], track_details["ws"] * 1.95, cols, label=labs
+            track_details["ws"]["Time"], track_details["ws"] * 1.95, cols, label=labs, marker='o'
         )
 
     #    axs[0].plot([harvey["date"][42], harvey["date"][42]], [10, 150], "b--")
     axs[0].set_xlabel("Date")
     axs[0].set_ylabel("10 m Wind Speed (knots)")
-    axs[0].set_xlim((harvey["date"][33], harvey["date"][-1]))
+    axs[0].set_xlim((harvey["time"][33], harvey["time"][-15]))
     #    axs[0].set_ylim((10, 150))
     myFmt = mdates.DateFormatter("%dZ%H")
     axs[0].xaxis.set_major_formatter(myFmt)
 
-    axs[1].plot(harvey["date"], harvey["mslp"], "k-", label="OBS")
+    axs[1].plot(harvey["time"], harvey["mslp"], color="k", label="OBS", marker='o')
     for track_details, labs, cols in zip(track_details_array, labels, colors):
         axs[1].plot(
-            track_details["mslp"]["Time"], track_details["mslp"], cols, label=labs
+            track_details["mslp"]["Time"], track_details["mslp"], color=cols, label=labs, marker='o'
         )
 
     plt.legend()
     #    axs[1].plot([harvey["date"][42], harvey["date"][42]], [880, 1008], "b--")
     axs[1].set_xlabel("Date")
     axs[1].set_ylabel("MSLP (hPa)")
-    axs[1].set_xlim((harvey["date"][33], harvey["date"][-1]))
+    axs[1].set_xlim((harvey["time"][33], harvey["time"][-15]))
     #    axs[1].set_ylim((880, 1008))
     myFmt = mdates.DateFormatter("%dZ%H")
     axs[1].xaxis.set_major_formatter(myFmt)
-    plt.tight_layout()
 
+    [ax.tick_params(axis='x', rotation=30)  for ax in axs]
+    [ax.grid(True) for ax in axs]
+
+    plt.tight_layout()
+    return axs
 
 def plot_track(harvey, track_details_array, labels, colors):
     shapefile_path = (
@@ -97,7 +102,7 @@ def plot_track(harvey, track_details_array, labels, colors):
 
     for track_details, labs, cols in zip(track_details_array, labels, colors):
         ax.plot(
-            track_details["track_lon"], track_details["track_lat"], cols, label=labs
+            track_details["track_lon"], track_details["track_lat"], cols, label=labs, 
         )
 
     gl = ax.gridlines(draw_labels=True)
@@ -110,7 +115,7 @@ def plot_track(harvey, track_details_array, labels, colors):
     plt.legend(loc="upper left")
 
     plt.tight_layout()
-
+    return ax
 
 def calculate_error(out, harvey):
     ws_error = []
@@ -121,7 +126,7 @@ def calculate_error(out, harvey):
             [
                 harvey["vmax"][
                     np.where(
-                        harvey["date"]
+                        harvey["time"]
                         == pd.to_datetime(str(val.values)).to_pydatetime()
                     )[0]
                 ]
@@ -141,7 +146,7 @@ def calculate_error(out, harvey):
             [
                 harvey["mslp"][
                     np.where(
-                        harvey["date"]
+                        harvey["time"]
                         == pd.to_datetime(str(val.values)).to_pydatetime()
                     )[0]
                 ]
@@ -162,7 +167,7 @@ def calculate_error(out, harvey):
             [
                 harvey["lon"][
                     np.where(
-                        harvey["date"]
+                        harvey["time"]
                         == pd.to_datetime(str(val.values)).to_pydatetime()
                     )[0]
                 ]
@@ -179,7 +184,7 @@ def calculate_error(out, harvey):
             [
                 harvey["lat"][
                     np.where(
-                        harvey["date"]
+                        harvey["time"]
                         == pd.to_datetime(str(val.values)).to_pydatetime()
                     )[0]
                 ]
@@ -194,7 +199,7 @@ def calculate_error(out, harvey):
         )
 
         track_error.append(
-            np.sqrt(np.concatenate(model2_lon**2 + model2_lat**2)).mean() * 111.11
+            np.sqrt((np.concatenate(model2_lon**2 + model2_lat**2)).astype('float')).mean() * 111.11
         )
 
     return {"ws": ws_error, "mslp": mslp_error, "track": track_error}

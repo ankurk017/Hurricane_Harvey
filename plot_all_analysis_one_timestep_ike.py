@@ -86,6 +86,30 @@ post_wrffiles = sorted(
     glob.glob(home_2512 + f"/post/WRF{case}/test/em_real/wrfout_d03_2017-*")
 )[41:52] #[22:24]
 output_dir = f"../figures/Ensemble/Cross-Section/{case[1:]}/"
+
+case = ''
+"""
+home_2512 = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Ike/WRF_simulations/"
+
+pre_wrffiles = sorted(
+    glob.glob(home_2512 + f"/pre/WRF{case}/test/em_real/wrfout_d02_20*")
+)[30:43]
+post_wrffiles = sorted(
+    glob.glob(home_2512 + f"/post/WRF{case}/test/em_real/wrfout_d02_20*")
+)[30:43]
+output_dir = f"../figures/Ike/Ensemble/Cross-Section/"
+"""
+
+home_2512 = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Rita/WRF_simulations/"
+pre_wrffiles = sorted(
+    glob.glob(home_2512 + f"/pre/WRF{case}/test/em_real/wrfout_d02_20*")
+)[30:45]#[24:40]
+post_wrffiles = sorted(
+    glob.glob(home_2512 + f"/post/WRF{case}/test/em_real/wrfout_d02_20*")
+)[30:45]#[24:40]
+output_dir = f"../figures/Rita/Ensemble/Cross-Section/"
+
+
 image_files = []
 #ax = plot_rainfall_and_winds(pre=pre_wrffiles, post=post_wrffiles, plot_cross=True, start_point=start_point, end_point=end_point)
 #plt.show()
@@ -172,8 +196,8 @@ for prefiles, postfiles in progressbar.progressbar(zip(pre_wrffiles[1:], post_wr
     cbar.ax.tick_params(rotation=15)
     for axs in ax:
         
-        axs.set_xticks(x_ticks[::12])
-        axs.set_xticklabels(x_labels[::12], rotation=45, ha='right')
+        axs.set_xticks(x_ticks[::7])
+        axs.set_xticklabels(x_labels[::7], rotation=45, ha='right')
         axs.invert_yaxis()
     #    axs.set_xlabel("Latitude, Longitude")
         axs.set_ylabel("Pressure (hPa)")

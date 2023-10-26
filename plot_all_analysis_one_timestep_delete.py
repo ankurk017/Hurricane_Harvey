@@ -72,19 +72,19 @@ end_point = CoordPair(lat=30.5, lon=-94.5)
 start_point = CoordPair(lat=29.55, lon=-96.07)
 end_point = CoordPair(lat=30.27, lon=-94.84)
 
-start_point = CoordPair(lat=29.25, lon=-96.14) # for 2512
-end_point = CoordPair(lat=30.27, lon=-94.7)  # for 2512
+start_point = CoordPair(lat=29, lon=-96.4) # for 2512
+end_point = CoordPair(lat=31.00, lon=-94)  # for 2512
 
 
-case = '_cntl'
+case = '_plu1'
 
-home_2512 = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/"
+home_2512 = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2612/"
 pre_wrffiles = sorted(
-    glob.glob(home_2512 + f"/pre/WRF{case}/test/em_real/wrfout_d03_2017-*")
-)[41:52]# [22:24]
+    glob.glob(home_2512 + f"/pre/WRF{case}/test/em_real/wrfout_d02_2017-*")
+)[37:61]# [22:24]
 post_wrffiles = sorted(
-    glob.glob(home_2512 + f"/post/WRF{case}/test/em_real/wrfout_d03_2017-*")
-)[41:52] #[22:24]
+    glob.glob(home_2512 + f"/post/WRF{case}/test/em_real/wrfout_d02_2017-*")
+)[37:61] #[22:24]
 output_dir = f"../figures/Ensemble/Cross-Section/{case[1:]}/"
 image_files = []
 #ax = plot_rainfall_and_winds(pre=pre_wrffiles, post=post_wrffiles, plot_cross=True, start_point=start_point, end_point=end_point)
@@ -172,8 +172,8 @@ for prefiles, postfiles in progressbar.progressbar(zip(pre_wrffiles[1:], post_wr
     cbar.ax.tick_params(rotation=15)
     for axs in ax:
         
-        axs.set_xticks(x_ticks[::12])
-        axs.set_xticklabels(x_labels[::12], rotation=45, ha='right')
+        axs.set_xticks(x_ticks[::5])
+        axs.set_xticklabels(x_labels[::5], rotation=45)
         axs.invert_yaxis()
     #    axs.set_xlabel("Latitude, Longitude")
         axs.set_ylabel("Pressure (hPa)")
@@ -195,6 +195,8 @@ for prefiles, postfiles in progressbar.progressbar(zip(pre_wrffiles[1:], post_wr
 #plt.show()
 
 
+
+
 ## Create a GIF from the saved images
 gif_file = output_dir+f"/Cross_Section.gif"
 with imageio.get_writer(gif_file, mode="I", duration=0.5) as writer:
@@ -205,9 +207,8 @@ with imageio.get_writer(gif_file, mode="I", duration=0.5) as writer:
 
 print("GIF created successfully!")
 
-plt.close()
-plot_crossline(prefiles, start_point, end_point)
-plt.show()
+
+
 
 
 
