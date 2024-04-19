@@ -15,7 +15,6 @@ wrf_cntl = sorted(glob.glob('/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Har
 
 
 
-
 out_cntl = src.wrf_track.get_track_details(wrf_cntl)
 
 

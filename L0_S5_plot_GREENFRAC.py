@@ -46,9 +46,9 @@ axs[1].axes.set_aspect("equal")
 axs[0].set_title('GREENFRAC (LULC 2001)')
 axs[1].set_title('GREENFRAC (LULC 2017)')
 plt.tight_layout()
-plt.savefig('.'.join(geog_file_old.split("/")[-1].split(".")[:2])+'_GREENFRAC_map.jpeg', dpi=300)
+#plt.savefig('.'.join(geog_file_old.split("/")[-1].split(".")[:2])+'_GREENFRAC_map.jpeg', dpi=300)
 
-#plt.show()
+plt.show()
 
 
 

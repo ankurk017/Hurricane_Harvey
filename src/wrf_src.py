@@ -116,11 +116,11 @@ def find_common_min_max(data_matrices):
         return None, None
 
     # Initialize with the first matrix
-    min_value, max_value = np.min(data_matrices[0]), np.max(data_matrices[0])
+    min_value, max_value = np.nanmin(data_matrices[0]), np.nanmax(data_matrices[0])
 
     # Iterate through the remaining matrices
     for matrix in data_matrices[1:]:
-        min_matrix, max_matrix = np.min(matrix), np.max(matrix)
+        min_matrix, max_matrix = np.nanmin(matrix), np.nanmax(matrix)
         min_value = min(min_value, min_matrix)
         max_value = max(max_value, max_matrix)
 
@@ -170,13 +170,13 @@ def plot_bb_old(wrf_file, location):
     return fig
 
 
-def plot_crossline(wrf_file, start_point, end_point):
+def plot_crossline_old(wrf_file, start_point, end_point, cmap='gist_ncar', linewidth=2):
     fig = plt.figure(figsize=(10, 8))
     ax = plt.axes(projection=ccrs.PlateCarree())
     wrf_assign_coords((getvar(Dataset(wrf_file), "RAINNC") + getvar(Dataset(wrf_file), "RAINC"))).plot(
-        cmap="gist_ncar",  levels = np.arange(0, 1000, 100), cbar_kwargs={'shrink':0.8}
+        cmap=cmap,  levels = np.arange(0, 1000, 100), cbar_kwargs={'shrink':0.8}
     )
-    ax.plot((end_point.lon, start_point.lon), (end_point.lat, start_point.lat), "r-",)
+    ax.plot((end_point.lon, start_point.lon), (end_point.lat, start_point.lat), "r-",linewidth=linewidth)
     coast.plot_coast(ax)
     shapefile_path = (
         "/rhome/akumar/Downloads/Houston/COH_ADMINISTRATIVE_BOUNDARY_-_MIL.shp"
@@ -197,6 +197,41 @@ def plot_crossline(wrf_file, start_point, end_point):
     plt.tight_layout()
     return fig
 
+
+def plot_crossline(wrf_file, rainbands, cmap='gist_ncar', linewidth=2, rainband=('raindband1', 'rainband2')):
+
+    fig = plt.figure(figsize=(10, 8))
+    ax = plt.axes(projection=ccrs.PlateCarree())
+    wrf_assign_coords((getvar(Dataset(wrf_file), "RAINNC") + getvar(Dataset(wrf_file), "RAINC"))).plot(
+        cmap=cmap,  levels = np.arange(0, 1000, 100), cbar_kwargs={'shrink':0.8}
+    )
+
+    start_point = rainbands[rainband[0]]['start']
+    end_point = rainbands[rainband[0]]['end']
+    ax.plot((end_point.lon, start_point.lon), (end_point.lat, start_point.lat), "r-",linewidth=linewidth)
+    start_point = rainbands[rainband[1]]['start']
+    end_point = rainbands[rainband[1]]['end']
+    ax.plot((end_point.lon, start_point.lon), (end_point.lat, start_point.lat), "r-",linewidth=linewidth)
+
+    coast.plot_coast(ax)
+    shapefile_path = (
+        "/rhome/akumar/Downloads/Houston/COH_ADMINISTRATIVE_BOUNDARY_-_MIL.shp"
+    )
+    reader = shpreader.Reader(shapefile_path)
+    geometries = reader.geometries()
+    for geometry in geometries:
+        ax.add_geometries(
+            [geometry], ccrs.PlateCarree(), facecolor="none", edgecolor="blue"
+        )
+
+    gl = ax.gridlines(draw_labels=True)
+    gl.right_labels = False
+    gl.top_labels = False
+    ax.set_xlim([-96.58, -93.7])
+    ax.set_ylim([28.45, 30.41])
+
+    plt.tight_layout()
+    return fig
 
 
 

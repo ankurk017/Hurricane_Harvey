@@ -9,7 +9,6 @@ import cartopy.io.shapereader as shpreader
 import shapely.geometry as sgeom
 from shapely.ops import unary_union
 from shapely.prepared import prep
-from self_utils import coast
 from src.wrf_src import wrf_assign_coords, plot_crossline
 import progressbar
 from wrf import to_np, getvar, CoordPair, vertcross
@@ -74,18 +73,23 @@ end_point = CoordPair(lat=30.27, lon=-94.84)
 
 start_point = CoordPair(lat=29.25, lon=-96.14) # for 2512
 end_point = CoordPair(lat=30.27, lon=-94.7)  # for 2512
+from P1_get_rainbands_locs import get_rainbands_locs_updated
+
+rainband = 'rainband3'
+start_point1 = CoordPair(lat=29.9, lon=-95.87) # for 2512
+end_point1 = CoordPair(lat=29.9, lon=-94.22)  # for 2512
 
 
 case = '_cntl'
 
 home_2512 = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/"
 pre_wrffiles = sorted(
-    glob.glob(home_2512 + f"/pre/WRF{case}/test/em_real/wrfout_d03_2017-*")
-)[41:52]# [22:24]
+    glob.glob(home_2512 + f"/pre/WRF{case}/test/em_real/wrfout_d03_2017-08-27*")
+)[7:15]# [22:24]
 post_wrffiles = sorted(
-    glob.glob(home_2512 + f"/post/WRF{case}/test/em_real/wrfout_d03_2017-*")
-)[41:52] #[22:24]
-output_dir = f"../figures/Ensemble/Cross-Section/{case[1:]}/"
+    glob.glob(home_2512 + f"/post/WRF{case}/test/em_real/wrfout_d03_2017-08-27*")
+)[7:15] #[22:24]
+output_dir = f"../figures_paper/Ensemble/Cross-Section/{case[1:]}/"
 image_files = []
 #ax = plot_rainfall_and_winds(pre=pre_wrffiles, post=post_wrffiles, plot_cross=True, start_point=start_point, end_point=end_point)
 #plt.show()

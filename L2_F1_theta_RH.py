@@ -35,6 +35,8 @@ harvey = basin.get_storm(("harvey", 2017))
 
 data_dir = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_IDA/Analysis/wrfouts/"
 data_dir = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V1/pre/WRF_9-3-51/WRFV4/"
+data_dir = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/pre/WRF/test/em_real/"
+
 
 pres_levels = np.array(
     (np.arange(1000, 700, -25), np.arange(700, 100, -50))).ravel()
@@ -46,7 +48,7 @@ ref_theta = get_wrfvar(ref_ncfile, "theta", pres_levels)
 
 
 wrf_file = data_dir + "wrfout_d02_2017-08-26_00:00:00"
-wrf_file = data_dir + "wrfout_d02_2017-08-24_12:00:00"
+wrf_file = data_dir + "wrfout_d02_2017-08-27_12:00:00"
 
 ncfile = Dataset(wrf_file)
 
@@ -230,4 +232,4 @@ plt.ylabel("Pressure (hPa)")
 plt.title(f"{str(slp['Time'].values)[:13]} ")
 plt.tight_layout()
 plt.savefig(f"../figures/Theta_RH_{str(slp['Time'].values)[:13]}.jpeg")
-# plt.show()
+plt.show()

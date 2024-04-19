@@ -106,8 +106,8 @@ pre_files = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V
 post_files = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/post/WRF/test/em_real/"
 variable = 'precip'
 
-pre_precip = get_precip(pre_files, dates=['27', '28'], var_name = variable)[variable]
-post_precip = get_precip(post_files, dates=['27', '28'], var_name = variable)[variable]
+pre_precip = get_precip(pre_files, dates=['28', ], var_name = variable)[variable]
+post_precip = get_precip(post_files, dates=['28', ], var_name = variable)[variable]
 
 
 pre_precip_polar_mean = pre_precip.mean(dim='time').isel(radius=np.arange(0, 25))
@@ -129,7 +129,7 @@ cont2 = ax2.contourf(post_precip_polar_mean.angle, post_precip_polar_mean.radius
 ax2.set_theta_zero_location('N')
 ax2.set_title('LULC 2017')
 
-cax = fig.add_axes([0.87, 0.1, 0.03, 0.8])
+cax = fig.add_axes([0.87, 0.18, 0.03, 0.7])
 cbar = fig.colorbar(cont2, cax=cax, shrink=0.75)
 cbar.ax.set_ylabel('Precipitation (mm/hr)')
 
@@ -141,7 +141,7 @@ ax1.set_xticklabels([])
 ax2.set_xticklabels([])
 
 plt.tight_layout()
-plt.savefig(f'../figures_paper/rainband/pcp_polar.jpeg', dpi=300)
+#plt.savefig(f'../figures_paper/rainband/pcp_polar_28.jpeg', dpi=300)
 
 
 pre_precip = get_precip(pre_files, dates=['27', '28'], var_name = variable, hurr_center_ref=True, ref_loc=(-96.8, 29.2))[variable]
@@ -166,29 +166,40 @@ axs[1].set_xlabel('Distance from hurricane center (km)')
 cax = fig.add_axes([0.88, 0.25, 0.02, 0.6])  # Modify the values as needed
 cbar = fig.colorbar(cont2, cax=cax)
 cbar.ax.set_ylabel('Precipitation (mm/hr)')
-plt.savefig(f'../figures_paper/rainband/Rainfall_TS_radial_mean.jpeg', dpi=300)
+#plt.savefig(f'../figures_paper/rainband/Rainfall_TS_radial_mean.jpeg', dpi=300)
 
 plot_pre = pre_precip.sel(angle=slice(0, 2)).mean(dim='angle')
 plot_post = post_precip.sel(angle=slice(0, 2)).mean(dim='angle')
 
+plot_pre = pre_precip.mean(dim='angle')
+plot_post = post_precip.mean(dim='angle')
+
+new_time = pd.date_range(start='2017-08-27', end='2017-08-28T23', freq='15T')  
+new_radius = np.arange(0, 550, 3) 
+
+plot_pre_finer= plot_pre.interp(time=new_time, radius=new_radius, method='linear')
+plot_post_finer= plot_post.interp(time=new_time, radius=new_radius, method='linear')
+
+
 minmax = find_common_min_max((plot_pre.values, plot_post.values))
-levels = np.linspace(minmax[0], minmax[1]*0.8, 15)
+levels = np.linspace(minmax[0], minmax[1]*0.8, 8)
 
 fig, axs = plt.subplots(1, 2, figsize=(14, 7), sharex=True, sharey=True,
     gridspec_kw={'bottom': 0.2, 'left': 0.12, 'right': 0.85, 'hspace': 0.3})
 
-im1 = plot_pre.plot(ax=axs[0], cmap='jet', levels=levels, extend='both', add_colorbar=False)
+im1 = plot_pre.plot.contourf(ax=axs[0], cmap='jet', levels=levels, extend='both', add_colorbar=False)
 axs[0].set_title('Precipitation (LULC 2001)')
 axs[0].set_xlabel('Distance from hurricane center (km)')
 
-im2 = plot_post.plot(ax=axs[1], cmap='jet', levels=levels, extend='both', add_colorbar=False)
+im2 = plot_post.plot.contourf(ax=axs[1], cmap='jet', levels=levels, extend='both', add_colorbar=False)
 axs[1].set_title('Precipitation (LULC 2017)')
 axs[1].set_xlabel('Distance from hurricane center (km)')
 cax = fig.add_axes([0.88, 0.25, 0.02, 0.6])  # Modify the values as needed
-cbar = fig.colorbar(cont2, cax=cax)
+cbar = fig.colorbar(im2, cax=cax)
 cbar.ax.set_ylabel('Precipitation (mm/hr)')
-plt.savefig(f'../figures_paper/rainband/Rainfall_TS_radial_sliced.jpeg', dpi=300)
-
+#plt.savefig(f'../figures_paper/rainband/Rainfall_TS_radial_sliced.jpeg', dpi=300)
+#plt.savefig(f'../figures_paper/rainband/Rainfall_TS_radial_mean.jpeg', dpi=300)
+plt.show()
 
 
 time_slice = ['2017-08-27', '2017-08-28']
@@ -209,8 +220,8 @@ for index in range(2):
 ax[1].legend()
 
 plt.tight_layout()
-plt.savefig(f'../figures_paper/rainband/radial_pcp.jpeg', dpi=300)
-#plt.show()
+#plt.savefig(f'../figures_paper/rainband/radial_pcp.jpeg', dpi=300)
+plt.show()
 
 
 

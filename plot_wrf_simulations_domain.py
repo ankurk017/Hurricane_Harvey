@@ -18,11 +18,11 @@ import cartopy.crs as ccrs
 import matplotlib.patches as patches
 
 plt.rcParams.update(
-    {"font.size": 14, "font.weight": "bold", "savefig.dpi": 300})
+    {"font.size": 16, "font.weight": "bold", "savefig.dpi": 300})
 
 
 def plot_domain(dbb, margin=4):
-    fig = plt.figure(figsize=(13, 6))
+    fig = plt.figure(figsize=(9, 7))
     ax = plt.axes(projection=ccrs.PlateCarree())
     ax.stock_img()
     ax.coastlines(resolution="10m")
@@ -126,9 +126,9 @@ for geometry in geometries:
                          facecolor='none', edgecolor='blue')
 
 
-scatter = plot_hurr_track(ax, year=2017, name='harvey', linestyle='solid')
-scatter = plot_hurr_track(ax, year=1983, name='alicia', linestyle='dotted')
-scatter = plot_hurr_track(ax, year=2008, name='ike', linestyle='dashed')
+scatter = plot_hurr_track(ax, year=2005, name='RITA', linestyle='dashed')
+scatter = plot_hurr_track(ax, year=2008, name='IKE', linestyle='dotted')
+scatter = plot_hurr_track(ax, year=2017, name='HARVEY', linestyle='solid')
 
 plt.legend()
 
@@ -137,5 +137,5 @@ cbar.set_ticks((bounds[:-1] + bounds[1:]) / 2)
 cbar.set_ticklabels(["TD", "TS", "Cat 1", "Cat 2", "Cat 3", "Cat 4", "Cat 5"])
 
 plt.tight_layout()
-plt.savefig('../figures/WRF_simulations_domain.jpeg')
+plt.savefig('../figures_draft/WRF_simulations_domain.jpeg')
 plt.show()

@@ -97,12 +97,14 @@ pre_wspd_cross, post_wspd_cross =[], []
 for prefiles, postfiles in progressbar.progressbar(zip(pre_wrffiles[1:], post_wrffiles[1:])):
     ncfile_pre = Dataset(prefiles)
     pres = getvar(ncfile_pre, "pres") / 100
-    wspd = getvar(ncfile_pre, "wa", units="m/s")
-    wspd = getvar(ncfile_pre, "rh")
+#    wspd = getvar(ncfile_pre, "wa", units="m/s")
+#    wspd = getvar(ncfile_pre, "rh")
+#    wspd = getvar(ncfile_pre, "QVAPOR")
+    wspd = getvar(ncfile_pre, "RAINC")+getvar(ncfile_pre, "RAINNC")
     pre_wspd_cross.append(vertcross(
         wspd,
         pres,
-        levels=(950, 925),
+        levels=(800, 850),
         wrfin=ncfile_pre,
         start_point=start_point,
         end_point=end_point,
@@ -112,12 +114,14 @@ for prefiles, postfiles in progressbar.progressbar(zip(pre_wrffiles[1:], post_wr
 
     ncfile_post = Dataset(postfiles)
     pres = getvar(ncfile_post, "pres") / 100
-    wspd = getvar(ncfile_post, "wa", units="m/s")
-    wspd = getvar(ncfile_post, "rh")
+#    wspd = getvar(ncfile_post, "wa", units="m/s")
+#    wspd = getvar(ncfile_post, "rh")
+#    wspd = getvar(ncfile_post, "QVAPOR")
+    wspd = getvar(ncfile_post, "RAINC")+getvar(ncfile_post, "RAINNC")
     post_wspd_cross.append(vertcross(
         wspd,
         pres,
-        levels=(950, 925),
+        levels=(800, 850),
         wrfin=ncfile_post,
         start_point=start_point,
         end_point=end_point,
@@ -128,8 +132,8 @@ for prefiles, postfiles in progressbar.progressbar(zip(pre_wrffiles[1:], post_wr
 
 fig, axs = plt.subplots(1, 2, figsize=(13, 8), sharey=True)
 
-xr.concat(pre_wspd_cross, dim='Time').plot(ax=axs[0]) #, levels = np.arange(60, 105, 5), extend='both')
-xr.concat(post_wspd_cross, dim='Time').plot(ax=axs[1]) # , levels = np.arange(60, 100, 5), extend='both')
+xr.concat(pre_wspd_cross, dim='Time').plot(ax=axs[0], cmap='jet') #, levels = np.arange(60, 105, 5), extend='both')
+xr.concat(post_wspd_cross, dim='Time').plot(ax=axs[1], cmap='jet') # , levels = np.arange(60, 100, 5), extend='both')
 
 plt.tight_layout()
 plt.show()

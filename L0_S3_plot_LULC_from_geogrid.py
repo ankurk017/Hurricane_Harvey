@@ -22,6 +22,7 @@ plt.rcParams.update({"font.size": 14, "font.weight": "bold"})
 
 geog_file = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2612/pre/WPS/geo_em.d03.nc"
 geog_file = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/pre/WPS/geo_em.d03.nc"
+geog_file = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/update_geog/def_geog_files/geo_em.d03_epa_2030.nc'
 pre_geog_file = xr.open_dataset(geog_file, engine="netcdf4")
 wrf_longitudes_pre = pre_geog_file["XLONG_M"].squeeze().values
 wrf_latitudes_pre = pre_geog_file["XLAT_M"].squeeze().values
@@ -30,6 +31,9 @@ wrf_lulc_pre = pre_geog_file["LU_INDEX"].squeeze().squeeze().values
 
 geog_file = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2612/post/WPS/geo_em.d03.nc"
 geog_file = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/post/WPS/geo_em.d03.nc"
+
+geog_file = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/update_geog/def_geog_files/geo_em.d03_epa_2100.nc'
+
 post_geog_file = xr.open_dataset(geog_file, engine="netcdf4")
 wrf_longitudes_post = post_geog_file["XLONG_M"].squeeze().values
 wrf_latitudes_post = post_geog_file["XLAT_M"].squeeze().values
@@ -101,25 +105,9 @@ def plot_lulc_bar(wrf_lulc_pre, wrf_lulc_post):
     percentages_pre = (wrf_lulc_pre / total_area_pre) * 100
     percentages_post = (wrf_lulc_post / total_area_post) * 100
 
-    lulc_classes = [
-        "Class 1",
-        "Class 2",
-        "Class 3",
-        "Class 4",
-        "Class 5",
-        "Class 6",
-        "Class 7",
-        "Class 8",
-        "Class 9",
-        "Class 10",
-        "Class 11",
-        "Class 12",
-        "Class 13",
-        "Class 14",
-        "Class 15",
-        "Class 16",
-        "Class 17",
-    ]
+    lulc_cmap, lulc_classes = get_lulc_colormap()
+
+    lulc_classes = list(lulc_classes.keys())
 
     width = 0.35
     x = np.arange(len(lulc_classes))
@@ -171,14 +159,16 @@ wrf_lulc_post_count = np.array(
 
 plot_lulc_bar(wrf_lulc_pre_count, wrf_lulc_post_count)
 
-#plt.show()
+plt.show()
 
 
-pd.DataFrame(
+output_csv = pd.DataFrame(
     np.array((wrf_lulc_pre_count, wrf_lulc_post_count)).T,
     index=lulc_classes,
     columns=["pre", "post"],
-).to_csv(
+)
+print(output_csv)
+output_csv.to_csv(
     "../tables/" + ".".join(geog_file.split("/")[-1].split(".")[:2]) + "_LULC_count.csv"
 )
 

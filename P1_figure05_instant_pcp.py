@@ -60,12 +60,12 @@ home_2512 = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V
 wrfoutfile_pre = sorted(
     glob.glob(home_2512 + f"/pre/WRF{case}/test/em_real/wrfout_d02_2017-*")
 )[
-    37:52
+    20:52
 ]  # [7:12]# [22:24]
 wrfoutfile_post = sorted(
     glob.glob(home_2512 + f"/post/WRF{case}/test/em_real/wrfout_d02_2017-*")
 )[
-    37:52
+    20:52
 ]  # [7:12] #[22:24]
 
 index = np.min((len(wrfoutfile_pre), len(wrfoutfile_post)))

@@ -16,6 +16,7 @@ from shapely.ops import unary_union
 from shapely.prepared import prep
 import datetime
 from matplotlib.patches import Rectangle
+from matplotlib.ticker import MaxNLocator
 
 plt.rcParams.update({"font.size": 16, "font.weight": "bold"})
 
@@ -35,6 +36,8 @@ box = 1.5
 
 var_timeseries_pre = []
 var_timeseries_post = []
+var_timeseries_pre_mean = []
+var_timeseries_post_mean = []
 
 for wrf_files_id in progressbar.progressbar(range(len(wrfoutfile_post) - 1)):
 
@@ -51,20 +54,7 @@ for wrf_files_id in progressbar.progressbar(range(len(wrfoutfile_post) - 1)):
     var_pre = wrf_assign_coords(getvar(wrf_ncfile_pre, "RAINC"))
     var_pre.values = var_pre_tmp
 
-    lat_id = np.where(
-        np.logical_and(
-            var_pre["south_north"].values > location[1] - box,
-            var_pre["south_north"].values <= location[1] + box,
-        )
-    )[0]
-    lon_id = np.where(
-        np.logical_and(
-            var_pre["west_east"].values > location[0] - box,
-            var_pre["west_east"].values <= location[0] + box,
-        )
-    )[0]
-
-    var_timeseries_pre.append(var_pre.isel(south_north=lat_id, west_east=lon_id).mean())
+    var_timeseries_pre.append(var_pre.sel(south_north=slice(location[1] - box, location[1] + box), west_east=slice(location[0] - box, location[0] + box)).mean())
 
     wrf_ncfile_post = Dataset(wrfoutfile_post[wrf_files_id + 1])
     wrf_ncfile_post_tminus1 = Dataset(wrfoutfile_post[wrf_files_id])
@@ -77,23 +67,10 @@ for wrf_files_id in progressbar.progressbar(range(len(wrfoutfile_post) - 1)):
 
     var_post = wrf_assign_coords(getvar(wrf_ncfile_post, "RAINC"))
     var_post.values = var_post_tmp
-    lat_id = np.where(
-        np.logical_and(
-            var_post["south_north"].values > location[1] - box,
-            var_post["south_north"].values <= location[1] + box,
-        )
-    )[0]
-    lon_id = np.where(
-        np.logical_and(
-            var_post["west_east"].values > location[0] - box,
-            var_post["west_east"].values <= location[0] + box,
-        )
-    )[0]
+
+    var_timeseries_post.append(var_post.sel(south_north=slice(location[1] - box, location[1] + box), west_east=slice(location[0] - box, location[0] + box)).mean())
 
 
-    var_timeseries_post.append(
-        var_post.isel(south_north=lat_id, west_east=lon_id).mean()
-    )
 
 var_timeseries_pre_merged = xr.concat(var_timeseries_pre, dim="Time")
 var_timeseries_post_merged = xr.concat(var_timeseries_post, dim="Time")
@@ -110,28 +87,15 @@ gpm_timestep = [
     datetime.datetime(*dates.timetuple()[:6]) for dates in gpm_rainfall["time"].values
 ]
 gpm = xr.open_mfdataset(gpm_files)["precipitationCal"]
-gpm_rainfall_region = (
-    gpm.isel(
-        lon=np.where(
-            np.logical_and(
-                gpm["lon"] > location[0] - box, gpm["lon"] <= location[0] + box
-            )
-        )[0],
-        lat=np.where(
-            np.logical_and(
-                gpm["lat"] > location[1] - box, gpm["lat"] <= location[1] + box
-            )
-        )[0],
-    )
-    .mean(dim="lon")
-    .mean(dim="lat")
-)
+gpm_rainfall_region = gpm.sel( lon=slice(location[0] - box, location[0] + box ),   lat=slice( location[1] - box, location[1] + box)         )
+
+gpm_rainfall_region_mean = gpm_rainfall_region.mean(dim=["lon", "lat"])
 
 #################
 
 gpm_index = np.where([gpm_timestep_values==datetime.datetime.utcfromtimestamp(var_timeseries_post_merged["Time"][0].values.astype('O') / 1e9) for gpm_timestep_values in gpm_timestep])[0][0]
 fig, axs = plt.subplots(1, 1, figsize=(7.5, 4.3))
-axs.plot(gpm_timestep, np.cumsum(gpm_rainfall_region.values)-np.cumsum(gpm_rainfall_region.values)[gpm_index], "k-", label="GPM")
+axs.plot(gpm_timestep, np.cumsum(gpm_rainfall_region_mean.values)-np.cumsum(gpm_rainfall_region_mean.values)[gpm_index], "k-", label="GPM")
 axs.plot(
     var_timeseries_pre_merged["Time"],
     np.cumsum(var_timeseries_pre_merged),
@@ -158,7 +122,7 @@ plt.tight_layout()
 
 
 fig, axs = plt.subplots(1, 1, figsize=(10, 5.5))
-axs.plot(gpm_timestep, gpm_rainfall_region.values, "k-", label="GPM")
+axs.plot(gpm_timestep, gpm_rainfall_region_mean.values, "k-", label="GPM")
 axs.plot(
     var_timeseries_pre_merged["Time"],
     var_timeseries_pre_merged,

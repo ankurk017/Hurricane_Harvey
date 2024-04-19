@@ -85,10 +85,11 @@ def plot_domain(ax):
  [ax.add_patch(draw_box(dbb)) for dbb in (d1bb, d2bb, d3bb)]
  return None
 
-geog_2001 = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/pre/WPS/geo_em.d01.nc"
-geog_2020 = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/post/WPS/geo_em.d01.nc"
-geog_2050 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/update_geog/def_geog_files/geo_em.d01_epa_2050.nc'
-geog_2100 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/update_geog/def_geog_files/geo_em.d01_epa_2100.nc'
+domain = 'd03'
+geog_2001 = f"/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/pre/WPS/geo_em.{domain}.nc"
+geog_2020 = f"/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/post/WPS/geo_em.{domain}.nc"
+geog_2050 = f'/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/update_geog/def_geog_files/geo_em.{domain}_epa_2050_cropland.nc'
+geog_2100 = f'/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/update_geog/def_geog_files/geo_em.{domain}_epa_2100_cropland.nc'
 
 fig = plt.figure(figsize=(12.5, 9))
 
@@ -104,6 +105,6 @@ plot_lulc_geogrid(geog_2050, label='(c) LULC 2050', axes=axes3)
 plot_lulc_geogrid(geog_2100, label='(d) LULC 2100', axes=axes4)
 
 plt.subplots_adjust(hspace=0.25)
-plt.savefig('../figures_draft01/fig01.jpeg', dpi=400)
-plt.show()
+plt.savefig(f'../figures_draft01/fig01_{domain}_cropland.jpeg', dpi=400)
+#plt.show()
 

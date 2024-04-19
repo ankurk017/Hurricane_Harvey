@@ -35,10 +35,10 @@ def correlation_without_nans(array1, array2):
 
 home = "/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/AHPS/"
 
-date = '28'
-case = 'WRF_PBL04'
+date = '27'
+case = 'WRF_PBL06'
 #case = 'post'
-labels = {"WRF_PBL00":'No PBL', "WRF_PBL01":'YSU', "WRF_PBL02":'MYJ TKE', "WRF_PBL04":'EDMF QNSE'}
+labels = {"WRF_PBL00":'No PBL', "WRF_PBL01":'YSU', "WRF_PBL02":'MYJ TKE', "WRF_PBL04":'EDMF QNSE', "WRF_PBL06":'MYNN'}
 
 yyear = '2001' if case=='pre' else '2017'
 

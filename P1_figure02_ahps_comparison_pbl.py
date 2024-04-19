@@ -30,10 +30,10 @@ def correlation_without_nans(array1, array2):
     return correlation
 
 date = '28'
-case = 'WRF_PBL04'
+case = 'WRF_PBL06'
 #case = 'post'
 
-labels = {"WRF_PBL00":'No PBL', "WRF_PBL01":'YSU', "WRF_PBL02":'MYJ TKE', "WRF_PBL04":'EDMF QNSE'}
+labels = {"WRF_PBL00":'No PBL', "WRF_PBL01":'YSU', "WRF_PBL02":'MYJ TKE', "WRF_PBL04":'EDMF QNSE', "WRF_PBL06":'MYNN'}
 
 
 yyear = '2001' if case=='pre' else '2017'

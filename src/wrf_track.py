@@ -67,7 +67,7 @@ def plot_track_intensity(harvey, track_details_array, labels, colors):
             track_details["mslp"]["Time"], track_details["mslp"], color=cols, label=labs, marker='o'
         )
 
-    plt.legend()
+    plt.legend(fontsize=13)
     #    axs[1].plot([harvey["date"][42], harvey["date"][42]], [880, 1008], "b--")
     axs[1].set_xlabel("Date")
     axs[1].set_ylabel("MSLP (hPa)")
@@ -82,23 +82,28 @@ def plot_track_intensity(harvey, track_details_array, labels, colors):
     plt.tight_layout()
     return axs
 
-def plot_track(harvey, track_details_array, labels, colors):
+def plot_track(harvey, track_details_array, labels, colors, extent=None, figsize=(9,7), legend_fontsize=14):
     shapefile_path = (
         "/rhome/akumar/Downloads/Houston/COH_ADMINISTRATIVE_BOUNDARY_-_MIL.shp"
     )
     reader = shpreader.Reader(shapefile_path)
     geometries = reader.geometries()
 
-    fig = plt.figure(figsize=(9, 7))
+    fig = plt.figure(figsize=figsize)
+    plt.subplots_adjust(left=0.29)
+
     ax = plt.axes(projection=ccrs.PlateCarree())
     coast.plot_coast(ax)
     for geometry in geometries:
         ax.add_geometries(
             [geometry], ccrs.PlateCarree(), facecolor="none", edgecolor="blue"
         )
-    ax.plot(harvey["lon"], harvey["lat"], "k-", label="OBS")
+    ax.plot(harvey["lon"], harvey["lat"], "k-", label="OBS", marker='o')
 
-    # 	ax.plot(track_lon[6:], track_lat[6:], 'r-', label='3 km (9-3 km moving)')
+    hurdat_crop = harvey
+
+    for index in np.arange(0, harvey.time.shape[0], 4):
+        ax.text(hurdat_crop["lon"][index]+0.05, hurdat_crop["lat"][index], str(hurdat_crop["time"][index])[:13].replace(' ', 'T')[8:], transform=ccrs.PlateCarree(), fontsize=legend_fontsize, color='#7D7D7D')
 
     for track_details, labs, cols in zip(track_details_array, labels, colors):
         ax.plot(
@@ -108,11 +113,17 @@ def plot_track(harvey, track_details_array, labels, colors):
     gl = ax.gridlines(draw_labels=True)
     gl.right_labels = False
     gl.top_labels = False
+
     #    ax.set_xlim([-102, -87.5])
-    ax.set_xlim([-99, -92])
     #    ax.set_ylim([22.5, 35])
-    ax.set_ylim([26, 31])
-    plt.legend(loc="upper left")
+    if extent is None:
+        ax.set_xlim([-99, -92])
+        ax.set_ylim([26, 31])
+    else:
+        ax.set_xlim([extent[0], extent[1]])
+        ax.set_ylim([extent[2], extent[3]])
+        
+    plt.legend(loc="upper left", fontsize=legend_fontsize)
 
     plt.tight_layout()
     return ax

@@ -148,10 +148,10 @@ plt.savefig('../figures_draft01/fig02a.jpeg', dpi=400)
 basin = tracks.TrackDataset(basin="north_atlantic", source="ibtracs", include_btk=False)
 harvey = basin.get_storm(("harvey", 2017))
 
-wrfoutfile_2001 = get_allwrffiles('/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/pre/WRF_cntl/test/em_real/')[::12]
-wrfoutfile_2017 = get_allwrffiles('/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/post/WRF_cntl/test/em_real/')[::12]
-wrfoutfile_2050 = get_allwrffiles('/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V3/WRF_simulations//WRF_FNL_2050/WRF/test/em_real/')[::12]
-wrfoutfile_2100 = get_allwrffiles('/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V3/WRF_simulations//WRF_FNL_2100/WRF/test/em_real/')[::12]
+wrfoutfile_2001 = get_allwrffiles('/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/pre/WRF_cntl/test/em_real/')[::3]
+wrfoutfile_2017 = get_allwrffiles('/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/post/WRF_cntl/test/em_real/')[::3]
+wrfoutfile_2050 = get_allwrffiles('/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V3/WRF_simulations//WRF_FNL_2050/WRF/test/em_real/')[::3]
+wrfoutfile_2100 = get_allwrffiles('/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V3/WRF_simulations//WRF_FNL_2100/WRF/test/em_real/')[::3]
 
 out_pbl1 = src.wrf_track.get_track_details(wrfoutfile_2001)
 out_pbl2 = src.wrf_track.get_track_details(wrfoutfile_2017)
@@ -166,7 +166,7 @@ col = ("b", 'r','g', 'm')
 titles = 'EPA_LULC'
 
 #track_ax = src.wrf_track.plot_track(harvey, out, labels=lab, colors=col, extent=[-103, -80, 16, 32])
-track_ax = src.wrf_track.plot_track(harvey, out, labels=lab, colors=col, extent=[-98.54, -91.72, 26, 32], figsize=(4, 3.5))
+track_ax = src.wrf_track.plot_track(harvey, out, labels=lab, colors=col, extent=[-98.54, -91.72, 26, 32], figsize=(4.5, 4), legend_fontsize=9)
 track_ax.set_title('(a) Tracks')
 #track_ax.set_xlim((-105, -85))
 #track_ax.set_ylim((20, 45))
@@ -180,7 +180,5 @@ plt.savefig('../figures_draft01/fig02b.jpeg', dpi=400)
 #plt.show()
 
 
-
-
-
-
+intensity_ax = src.wrf_track.plot_track_intensity(harvey, out, labels=lab, colors=col)
+plt.savefig('../figures_draft01/intenisty.jpeg', dpi=400)
