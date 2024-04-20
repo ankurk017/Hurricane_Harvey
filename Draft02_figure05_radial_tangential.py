@@ -56,10 +56,13 @@ def get_radial_tangential_wind(
 
     ua = getvar(ncfile, "ua", units="m/s")
     va = getvar(ncfile, "va", units="m/s")
+    wa = getvar(ncfile, "wa", units="m/s")
 
     ua_pres = xr.concat([interplevel(ua, p, pres) for pres in pres_levels], dim="level")
     va_pres = xr.concat([interplevel(va, p, pres) for pres in pres_levels], dim="level")
-    uv = xr.merge((ua_pres, va_pres))
+    wa_pres = xr.concat([interplevel(wa, p, pres) for pres in pres_levels], dim="level")
+
+    uv = xr.merge((ua_pres, va_pres, wa_pres))
 
     uv_xr = wrf_assign_coords(
         uv.metpy.assign_crs(
@@ -91,19 +94,17 @@ def get_radial_tangential_wind(
     return uv_radial_tangential_wind
 
 
-def plot_rad_tang(uv_cs, xx="radius"):
-
-    fig, axs = plt.subplots(1, 2, figsize=(16, 6.5), )
+def plot_rad_tang(uv_cs, xx="radius", case_name='pre', prefix=None, row = 0):
 
     # Radial Plot
-    rad = axs[0].contourf(
+    rad = axs[row, 0].contourf(
         uv_cs[xx],
         uv_cs["level"],
         uv_cs["radial"],
         cmap="bwr",
         levels=np.arange(-30, 40, 5),
     )
-    contour_rad = axs[0].contour(
+    contour_rad = axs[row, 0].contour(
         uv_cs[xx],
         uv_cs["level"],
         uv_cs["radial"],
@@ -111,88 +112,108 @@ def plot_rad_tang(uv_cs, xx="radius"):
         linewidths=0.5,
         levels=np.arange(-60, 60, 10),
     )
-    neg_contour_rad = axs[0].contour(
+    neg_contour_rad = axs[row, 0].contour(
         uv_cs[xx],
         uv_cs["level"],
         uv_cs["radial"],
         colors="k",
         linewidths=0.5,
         linestyles="dashed",
-        levels=np.arange(uv_cs["radial"].min(), 0, 5),
+        levels=np.arange(-20, 0, 5),
     )
-    pos_contour_rad = axs[0].contour(
+    pos_contour_rad = axs[row, 0].contour(
         uv_cs[xx],
         uv_cs["level"],
         uv_cs["radial"],
         colors="k",
         linewidths=0.5,
-        levels=np.arange(0, uv_cs["radial"].max(), 10),
+        levels=np.arange(0, 40, 10),
     )
-    axs[0].clabel(contour_rad, inline=True, fmt="%1.1f", fontsize=12)
-    cb_rad = plt.colorbar(rad, ax=axs[0])
+    axs[row, 0].clabel(contour_rad, inline=True, fmt="%1.1f", fontsize=12)
+
+    skip = {'x': 4, 'y':4}
+
+    rad_vals = uv_cs['wa_interp'] 
+    xxx, yyy, = np.meshgrid(uv_cs[xx][::skip['x']], uv_cs['level'][::skip['y']])
+    axs[row, 0].scatter(xxx, yyy, rad_vals[::skip['y'], ::skip['x']]*100, c=rad_vals[::skip['y'], ::skip['x']]*70, alpha=0.50, cmap='Greens', marker='o')
+    axs[row, 0].scatter(xxx, yyy, -(rad_vals[::skip['y'], ::skip['x']]*500), c=rad_vals[::skip['y'], ::skip['x']]*70, alpha=1, cmap='Reds', marker='x')
 
     # Tangential Wind
-    tan = axs[1].contourf(uv_cs[xx], uv_cs["level"], uv_cs["tangential"], cmap="jet")
-    contour_tan = axs[1].contour(
+    tan = axs[row, 1].contourf(uv_cs[xx], uv_cs["level"], uv_cs["tangential"], cmap="jet", levels=np.arange(-15, 40, 5))
+    contour_tan = axs[row, 1].contour(
         uv_cs[xx], uv_cs["level"], uv_cs["tangential"], colors="k", linewidths=0.5
     )
-    neg_contour_tan = axs[1].contour(
+    neg_contour_tan = axs[row, 1].contour(
         uv_cs[xx],
         uv_cs["level"],
         uv_cs["tangential"],
         colors="k",
         linewidths=0.5,
         linestyles="dashed",
-        levels=np.arange(uv_cs["tangential"].min(), 0, 5),
+        levels=np.arange(-20, 0, 5),
     )
-    pos_contour_tan = axs[1].contour(
+    pos_contour_tan = axs[row, 1].contour(
         uv_cs[xx],
         uv_cs["level"],
         uv_cs["tangential"],
         colors="k",
         linewidths=0.5,
-        levels=np.arange(0, uv_cs["tangential"].max(), 10),
+        levels=np.arange(0, 50, 10),
     )
-    axs[1].clabel(contour_tan, inline=True, fmt="%1.1f", fontsize=12)
-    cb_tan = plt.colorbar(tan, ax=axs[1])
+    axs[row, 1].clabel(contour_tan, inline=True, fmt="%1.1f", fontsize=12)
+    #[ax.invert_yaxis() for ax in (axs[row, 0], axs[row, 1])]
 
-    [ax.invert_yaxis() for ax in axs]
-
-    # Set color bar labels
-    cb_rad.set_label(f"Radial Wind ($V_r$)")
-    cb_tan.set_label(f"Tangential Wind ($V_t$)")
 
     # Set color bar labels
-    axs[0].set_title(f"Radial Wind ($V_r$)")
-    axs[1].set_title(f"Tangential Wind ($V_t$)")
+    axs[row, 0].set_title(f"{case_name} | $V_r$ | {prefix}")
+    axs[row, 1].set_title(f"{case_name} | $V_t$| {prefix}")
 
-    [ax.set_xlabel("Distance from the storm center (km)") for ax in axs]
-    [ax.set_ylabel("Pressure (hPa)") for ax in axs]
+    [ax.set_xlabel("Distance from the storm center (km)") for ax in (axs[row, 0], axs[row, 1])]
+    [ax.set_ylabel("Pressure (hPa)") for ax in (axs[row, 0], axs[row, 1])]
 
-    plt.tight_layout()
-    # plt.savefig('test.jpeg')
-    #plt.show()
+    if row == 0:
+     cb_rad = plt.colorbar(rad, ax=axs[:, 0].ravel(), orientation='horizontal')
+     cb_tan = plt.colorbar(tan, ax=axs[:, 1].ravel(), orientation='horizontal')
+     cb_rad.set_label(f"Radial Wind ($V_r$)")
+     cb_tan.set_label(f"Tangential Wind ($V_t$)")
+     return (cb_rad, cb_tan)
+    else:
+     None
 
-case_name = 'post'
-wrf_files = sorted(
+wrf_files_pre = sorted(
     glob.glob(
-        f"/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/{case_name}/WRF_cntl/test/em_real/wrfout_d02_2017-08-27*"
+        f"/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/pre/WRF_cntl/test/em_real/wrfout_d02_2017-08-27*"
     )
-)
-outdir = '../figures_paper/radial_tangential/'
+) #[6:13]
+wrf_files_post = sorted(
+    glob.glob(
+        f"/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V2/WRF_Simulations/WRF_FNL_2512/post/WRF_cntl/test/em_real/wrfout_d02_2017-08-27*"
+    )
+) #[6:13]
 
-for input_file in wrf_files:
- print(input_file)
- rad_tang = get_radial_tangential_wind(input_file)
- 
- plot_rad_tang(rad_tang)
- plt.suptitle(f"{case_name} | {input_file.split('/')[-1][:24]}")
- plt.tight_layout()
- figname = f"{outdir}/{case_name}/{case_name}_{input_file.split('/')[-1][:24]}.jpeg"
- plt.savefig(figname, dpi=400)
+
+outdir = '../figures_draft01/radial_tangential/'
+
+for index in range(len(wrf_files_post)):
+ print(index)
+ prefix = wrf_files_post[index].split('/')[-1][11:24]
+
+ rad_tang_pre = get_radial_tangential_wind(wrf_files_pre[index])
+ rad_tang_post = get_radial_tangential_wind(wrf_files_post[index])
+
+
+ fig, axs = plt.subplots(2, 2, figsize=(14, 9.5), sharex=True, sharey=True)
+
+ rad_c, tan_c = plot_rad_tang(rad_tang_pre, case_name = 'LULC 2001', prefix = prefix, row = 0)
+ plot_rad_tang(rad_tang_post, case_name = 'LULC 2017', prefix = prefix, row = 1)
+ plt.subplots_adjust(left=0.09, right=0.95, wspace=0.12, hspace=0.25, bottom=0.17, top=0.9)
+
+ rad_c.ax.set_position([0.15, 0.07, 0.3, 0.02])  
+ tan_c.ax.set_position([0.58, 0.07, 0.3, 0.02])  
+ axs[0, 1].invert_yaxis()
+
+ plt.savefig(f"{outdir}/{prefix}.jpeg", dpi=400)
  plt.close()
-
-#plt.show()
 
 
 
