@@ -6,7 +6,7 @@ import glob
 import cartopy.crs as ccrs
 from netCDF4 import Dataset
 from wrf import getvar, latlon_coords
-from self_utils import ahps, coast
+import src.coast as coast
 import numpy as np
 from scipy.interpolate import griddata
 import progressbar

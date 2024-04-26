@@ -7,14 +7,14 @@ import glob
 import cartopy.crs as ccrs
 from netCDF4 import Dataset
 from wrf import getvar, latlon_coords
-from self_utils import ahps, coast
+#from self_utils import ahps, coast
 import numpy as np
 import cartopy.io.shapereader as shpreader
 import shapely.geometry as sgeom
 from shapely.ops import unary_union
 from shapely.prepared import prep
-from self_utils import coast
-
+#from self_utils import coast
+from coast import plot_coast
 import datetime
 from matplotlib.patches import Rectangle
 
@@ -64,7 +64,10 @@ home_2512 = '/nas/rstor/akumar/USA/PhD/Objective01/Hurricane_Harvey/WRF_Harvey_V
 wrfoutfile_pre = sorted(glob.glob(home_2512 + f'/pre/WRF_cntl//test/em_real/wrfout_d03_2017-*'))
 wrfoutfile_post = sorted(glob.glob(home_2512 + f'/post/WRF_cntl//test/em_real/wrfout_d03_2017-*'))
 
-
+wrfoutfile_pre = sorted(glob.glob(
+    '/nas/rgroup/stela/akumar/WRF_Harvey_v4/WRF_Simulations_FNL/LULC_2001/WRFV4.5.2/test/em_real/wrfout_d02_2017-08-*00'))[:85]
+wrfoutfile_post = sorted(glob.glob(
+    '/nas/rgroup/stela/akumar/WRF_Harvey_v4/WRF_Simulations_FNL/LULC_2017/WRFV4.5.2/test/em_real/wrfout_d02_2017-08-*00'))[:85]
 
 
 var_name = "slp"
@@ -237,13 +240,7 @@ wrf_assign_coords(getvar(Dataset(wrfoutfile_pre[2]), "wspd_wdir10")).sel(wspd_wd
 rect = Rectangle((start_lon, start_lat), end_lon - start_lon, end_lat - start_lat,
                  facecolor='none', edgecolor='red', linewidth=2)
 ax.add_patch(rect)
-coast.plot_coast(ax)
-shapefile_path = "/rhome/akumar/Downloads/Houston/COH_ADMINISTRATIVE_BOUNDARY_-_MIL.shp"
-reader = shpreader.Reader(shapefile_path)
-geometries = reader.geometries()
-for geometry in geometries:
-    ax.add_geometries([geometry], ccrs.PlateCarree(),
-                         facecolor='none', edgecolor='blue')
+plot_coast(ax, houston=True)
 
 gl = ax.gridlines(draw_labels=True)
 gl.right_labels = False

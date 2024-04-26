@@ -148,6 +148,6 @@ cbar.ax.set_yticklabels(levels)
 cbar.ax.set_ylabel('Precipitation (mm)')
 
 plt.tight_layout()
-plt.savefig('../figures_paper/BH_projections/AHPS_pcp.jpeg', dpi=400)
+#plt.savefig('../figures_paper/BH_projections/AHPS_pcp.jpeg', dpi=400)
 plt.show()
 

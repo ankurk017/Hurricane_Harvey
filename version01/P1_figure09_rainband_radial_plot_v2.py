@@ -252,7 +252,7 @@ axs[2].set_title('Precipitation (LULC 2017)')
 axs[2].set_xlabel('Distance from hurricane center (km)')
 
 
-cax = fig.add_axes([0.88, 0.25, 0.02, 0.6])  # Modify the values as needed
+cax = fig.add_axes([0.88, 0.25, 0.012, 0.6])  # Modify the values as needed
 cbar = fig.colorbar(im2, cax=cax)
 cbar.ax.set_ylabel('Precipitation Rate(mm/hr)')
 plt.tight_layout()

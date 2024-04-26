@@ -192,7 +192,11 @@ wrf_files_post = sorted(
 ) #[6:13]
 
 
-outdir = '../figures_draft01/radial_tangential/'
+wrf_files_pre = sorted(glob.glob('/nas/rgroup/stela/akumar/WRF_Harvey_v4/WRF_Simulations_FNL/LULC_2001/WRFV4.5.2/test/em_real/wrfout_d02_2017-08-27*'))
+wrf_files_post = sorted(glob.glob('/nas/rgroup/stela/akumar/WRF_Harvey_v4/WRF_Simulations_FNL/LULC_2017/WRFV4.5.2/test/em_real/wrfout_d02_2017-08-27*'))
+
+
+outdir = '../figures_draft01/radial_tangential_FNL/'
 
 for index in range(len(wrf_files_post)):
  print(index)
