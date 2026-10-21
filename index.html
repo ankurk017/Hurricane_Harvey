@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta http-equiv="refresh" content="90"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>WRF Phase-1 status</title>
+<style>
+:root {
+  --bg:#0f1419; --card:#1a2332; --text:#e7ecf3; --muted:#9aa7b8; --line:#2a3648;
+  --ok:#1b7f4e; --run:#0b6bcb;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.35;
+}
+header {
+  padding:16px 16px 8px; position:sticky; top:0; background:rgba(15,20,25,.94);
+  backdrop-filter:blur(8px); border-bottom:1px solid var(--line); z-index:2;
+}
+h1 { margin:0; font-size:1.15rem; font-weight:650; }
+.sub { color:var(--muted); font-size:.8rem; margin-top:4px; }
+.cards {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:12px 16px;
+}
+.card {
+  background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px;
+  text-align:center;
+}
+.card .n { font-size:1.4rem; font-weight:700; }
+.card .l { font-size:.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:.03em; }
+.wrap { padding:0 8px 28px; overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:.78rem; min-width:640px; }
+th,td { padding:8px 8px; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle; }
+th { color:var(--muted); font-weight:600; font-size:.7rem; text-transform:uppercase; }
+td.m { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.72rem; }
+td.t { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.7rem; color:var(--muted); }
+td.num { font-variant-numeric:tabular-nums; white-space:nowrap; }
+.badge {
+  display:inline-block; color:#fff; padding:2px 8px; border-radius:999px;
+  font-size:.68rem; font-weight:600; text-transform:uppercase;
+}
+.bar {
+  height:8px; background:#243044; border-radius:999px; overflow:hidden; min-width:70px;
+}
+.bar i { display:block; height:100%; background:linear-gradient(90deg,#0b6bcb,#3dd68c); }
+tr.complete td.m { color:#7dcea0; }
+tr.running { background:rgba(11,107,203,.12); }
+footer { color:var(--muted); font-size:.72rem; padding:8px 16px 24px; }
+@media (max-width:700px) {
+  .cards { grid-template-columns:repeat(2,1fr); }
+  table { min-width:560px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>WRF Hydro Phase-1 (1-dom) status</h1>
+  <div class="sub">Auto-refresh ~90s · Updated UTC 2026-10-21 19:56:44 · priority=regular restarts where needed</div>
+</header>
+<section class="cards">
+  <div class="card"><div class="n">4</div><div class="l">Complete</div></div>
+  <div class="card"><div class="n">0</div><div class="l">Running</div></div>
+  <div class="card"><div class="n">28</div><div class="l">Queued</div></div>
+  <div class="card"><div class="n">0</div><div class="l">Partial / other</div></div>
+</section>
+<div class="wrap">
+<table>
+  <thead><tr><th>Member</th><th>Status</th><th>wrfout</th><th>Progress</th><th>Latest wrfout time</th></tr></thead>
+  <tbody>
+  <tr class='queued'><td class='m'>CU11_MP08_PBL01_URB2</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>70/73</td><td><div class='bar'><i style='width:96%'></i></div></td><td class='t'>2017-08-27_21:00:00</td></tr><tr class='queued'><td class='m'>CU11_MP08_PBL01_URB2_LULC2001</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>54/73</td><td><div class='bar'><i style='width:74%'></i></div></td><td class='t'>2017-08-27_05:00:00</td></tr><tr class='queued'><td class='m'>CU16_MP08_PBL01_URB2_LULC2001</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>54/73</td><td><div class='bar'><i style='width:74%'></i></div></td><td class='t'>2017-08-27_05:00:00</td></tr><tr class='queued'><td class='m'>CU16_MP08_PBL01_URB2</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>46/73</td><td><div class='bar'><i style='width:63%'></i></div></td><td class='t'>2017-08-26_21:00:00</td></tr><tr class='queued'><td class='m'>CU05_MP10_PBL01_URB2</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>37/73</td><td><div class='bar'><i style='width:51%'></i></div></td><td class='t'>2017-08-26_12:00:00</td></tr><tr class='queued'><td class='m'>CU05_MP10_PBL01_URB2_LULC2001</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>36/73</td><td><div class='bar'><i style='width:49%'></i></div></td><td class='t'>2017-08-26_11:00:00</td></tr><tr class='queued'><td class='m'>CU05_MP08_PBL02_URB2_LULC2001</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>31/73</td><td><div class='bar'><i style='width:42%'></i></div></td><td class='t'>2017-08-26_06:00:00</td></tr><tr class='queued'><td class='m'>CU05_MP08_PBL02_URB2</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>29/73</td><td><div class='bar'><i style='width:40%'></i></div></td><td class='t'>2017-08-26_04:00:00</td></tr><tr class='queued'><td class='m'>CU06_MP08_PBL02_URB2</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>27/73</td><td><div class='bar'><i style='width:37%'></i></div></td><td class='t'>2017-08-26_02:00:00</td></tr><tr class='queued'><td class='m'>CU05_MP10_PBL02_URB2</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>22/73</td><td><div class='bar'><i style='width:30%'></i></div></td><td class='t'>2017-08-25_21:00:00</td></tr><tr class='queued'><td class='m'>CU06_MP10_PBL01_URB2</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>18/73</td><td><div class='bar'><i style='width:25%'></i></div></td><td class='t'>2017-08-25_17:00:00</td></tr><tr class='queued'><td class='m'>CU06_MP10_PBL01_URB2_LULC2001</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>18/73</td><td><div class='bar'><i style='width:25%'></i></div></td><td class='t'>2017-08-25_17:00:00</td></tr><tr class='queued'><td class='m'>CU05_MP10_PBL02_URB2_LULC2001</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>17/73</td><td><div class='bar'><i style='width:23%'></i></div></td><td class='t'>2017-08-25_16:00:00</td></tr><tr class='queued'><td class='m'>CU06_MP08_PBL02_URB2_LULC2001</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>14/73</td><td><div class='bar'><i style='width:19%'></i></div></td><td class='t'>2017-08-25_13:00:00</td></tr><tr class='queued'><td class='m'>CU16_MP08_PBL02_URB2</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>5/73</td><td><div class='bar'><i style='width:7%'></i></div></td><td class='t'>2017-08-25_04:00:00</td></tr><tr class='queued'><td class='m'>CU16_MP08_PBL02_URB2_LULC2001</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>5/73</td><td><div class='bar'><i style='width:7%'></i></div></td><td class='t'>2017-08-25_04:00:00</td></tr><tr class='queued'><td class='m'>CU06_MP10_PBL02_URB2</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>2/73</td><td><div class='bar'><i style='width:3%'></i></div></td><td class='t'>2017-08-25_01:00:00</td></tr><tr class='queued'><td class='m'>CU06_MP10_PBL02_URB2_LULC2001</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>2/73</td><td><div class='bar'><i style='width:3%'></i></div></td><td class='t'>2017-08-25_01:00:00</td></tr><tr class='queued'><td class='m'>CU11_MP08_PBL02_URB2</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>2/73</td><td><div class='bar'><i style='width:3%'></i></div></td><td class='t'>2017-08-25_01:00:00</td></tr><tr class='queued'><td class='m'>CU11_MP08_PBL02_URB2_LULC2001</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>2/73</td><td><div class='bar'><i style='width:3%'></i></div></td><td class='t'>2017-08-25_01:00:00</td></tr><tr class='queued'><td class='m'>CU11_MP10_PBL01_URB2</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>2/73</td><td><div class='bar'><i style='width:3%'></i></div></td><td class='t'>2017-08-25_01:00:00</td></tr><tr class='queued'><td class='m'>CU11_MP10_PBL01_URB2_LULC2001</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>2/73</td><td><div class='bar'><i style='width:3%'></i></div></td><td class='t'>2017-08-25_01:00:00</td></tr><tr class='queued'><td class='m'>CU11_MP10_PBL02_URB2</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>2/73</td><td><div class='bar'><i style='width:3%'></i></div></td><td class='t'>2017-08-25_01:00:00</td></tr><tr class='queued'><td class='m'>CU11_MP10_PBL02_URB2_LULC2001</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>2/73</td><td><div class='bar'><i style='width:3%'></i></div></td><td class='t'>2017-08-25_01:00:00</td></tr><tr class='queued'><td class='m'>CU16_MP10_PBL01_URB2</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>2/73</td><td><div class='bar'><i style='width:3%'></i></div></td><td class='t'>2017-08-25_01:00:00</td></tr><tr class='queued'><td class='m'>CU16_MP10_PBL01_URB2_LULC2001</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>2/73</td><td><div class='bar'><i style='width:3%'></i></div></td><td class='t'>2017-08-25_01:00:00</td></tr><tr class='queued'><td class='m'>CU16_MP10_PBL02_URB2</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>2/73</td><td><div class='bar'><i style='width:3%'></i></div></td><td class='t'>2017-08-25_01:00:00</td></tr><tr class='queued'><td class='m'>CU16_MP10_PBL02_URB2_LULC2001</td><td><span class="badge" style="background:#8a6d00">queued</span></td><td class='num'>2/73</td><td><div class='bar'><i style='width:3%'></i></div></td><td class='t'>2017-08-25_01:00:00</td></tr><tr class='complete'><td class='m'>CU05_MP08_PBL01_URB2</td><td><span class="badge" style="background:#1b7f4e">complete</span></td><td class='num'>73/73</td><td><div class='bar'><i style='width:100%'></i></div></td><td class='t'>2017-08-28_00:00:00</td></tr><tr class='complete'><td class='m'>CU05_MP08_PBL01_URB2_LULC2001</td><td><span class="badge" style="background:#1b7f4e">complete</span></td><td class='num'>73/73</td><td><div class='bar'><i style='width:100%'></i></div></td><td class='t'>2017-08-28_00:00:00</td></tr><tr class='complete'><td class='m'>CU06_MP08_PBL01_URB2</td><td><span class="badge" style="background:#1b7f4e">complete</span></td><td class='num'>73/73</td><td><div class='bar'><i style='width:100%'></i></div></td><td class='t'>2017-08-28_00:00:00</td></tr><tr class='complete'><td class='m'>CU06_MP08_PBL01_URB2_LULC2001</td><td><span class="badge" style="background:#1b7f4e">complete</span></td><td class='num'>73/73</td><td><div class='bar'><i style='width:100%'></i></div></td><td class='t'>2017-08-28_00:00:00</td></tr>
+  </tbody>
+</table>
+</div>
+<footer>
+  Source: Derecho ensemble under WRF_Simulations · Expected ~73 hourly files (2017-08-25_00 → 2017-08-28_00).
+</footer>
+</body>
+</html>
