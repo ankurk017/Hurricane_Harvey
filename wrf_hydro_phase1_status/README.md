@@ -1,5 +1,9 @@
 # WRF Hydro Phase-1 run status
 
-Auto-updated dashboard for the 1-domain ensemble rerun.
+Auto-updated dashboard.
 
-**Phone / browser:** open the GitHub Pages or raw.githack URL printed by the updater.
+Phone URL (HTML preview):
+https://htmlpreview.github.io/?https://github.com/ankurk017/Hurricane_Harvey/blob/gh-pages/index.html
+
+After enabling GitHub Pages on branch `gh-pages`:
+https://ankurk017.github.io/Hurricane_Harvey/
